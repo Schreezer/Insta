@@ -1,9 +1,13 @@
+import "dart:typed_data";
+
 import "package:flutter/material.dart";
 import "package:flutter_svg/flutter_svg.dart";
+import "package:image_picker/image_picker.dart";
 import "package:instagram/resources/auth_methos.dart";
 import "package:instagram/utils/colors.dart";
 // import "package:instagram/utils/colors.dart";
 import "../Widgets/text_field_input.dart";
+import "../utils/utils.dart";
 // import "assets/images/instagram_logo.svg";
 
 class SignupScreen extends StatefulWidget {
@@ -18,6 +22,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   bool _visibility = false;
+  Uint8List? _image;
 
   @override
   void dispose() {
@@ -27,7 +32,12 @@ class _SignupScreenState extends State<SignupScreen> {
     _bioController.dispose();
     _usernameController.dispose();
   }
-
+  void selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+    setState((){
+      _image = image;
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
@@ -54,7 +64,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   bottom: -10,
                   left: 80,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: selectImage,
                     icon: const Icon(Icons.add_a_photo),
                   ),
                 ),
@@ -93,12 +103,6 @@ class _SignupScreenState extends State<SignupScreen> {
               // Sign Up Button
               InkWell(
                 onTap: () async {
-                  print(_emailController);
-                  print(_passwordController.text);
-                  print(_bioController.text);
-                  print(_usernameController.text);
-
-
                   String res = await AuthMethods().signupUser(
                     mail: _emailController.text,
                     password: _passwordController.text,
@@ -107,7 +111,7 @@ class _SignupScreenState extends State<SignupScreen> {
                     // Random Uint8List being input to file
                   );
                   // Your onTap code here
-                  // print(res);
+                  print(res);
                 },
                 splashColor: const Color.fromARGB(
                     255, 145, 244, 175), // Custom splash color

@@ -11,29 +11,24 @@ class AuthMethods{
     required String password,
     required String bio,
     required String userName,
-    // required Uint8List file,
+    // required Uint8List file
   }) async {
     String res = "Some Error Occured";
     try{
       if (mail.isNotEmpty || password.isNotEmpty || bio.isNotEmpty || userName.isNotEmpty  ){
         //register new user
         print("registering new user");
-        print(mail);
-        print(password);
         UserCredential cred = await _auth.createUserWithEmailAndPassword(email: mail, password: password);
        // add user to database
-       print(cred);
         await _firestore.collection("users").doc(cred.user!.uid).set({
           'userName':userName,
           'bio': bio,
           'email':mail,
           'uid':cred.user!.uid,
           // 'profileImage':file, 
-          // 'followers':[],
-          // 'following':[],
-
+          'followers':[],
+          'following':[],
         });
-        print(cred.user!.uid);
         res = "success";
       }
 
