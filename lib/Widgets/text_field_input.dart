@@ -35,7 +35,7 @@ class _TextFieldInputState extends State<TextFieldInput> {
     );
 
     return TextField(
-      controller: widget.textEditingController, // Use the received TextEditingController
+      controller: widget.textEditingController,
       decoration: InputDecoration(
         hintText: widget.hintText,
         border: inputBorder,
@@ -43,9 +43,17 @@ class _TextFieldInputState extends State<TextFieldInput> {
         enabledBorder: inputBorder,
         filled: true,
         contentPadding: const EdgeInsets.all(8),
+
+        // Use the 'suffix' property of InputDecoration
+        suffixIcon: widget.isPass
+            ? IconButton(
+                icon: Icon(widget.visibility ? Icons.visibility : Icons.visibility_off),
+                onPressed: updateStatus,
+              )
+            : null,
       ),
       keyboardType: widget.textInputType,
-      obscureText: widget.isPass,
+      obscureText: !widget.visibility && widget.isPass,
     );
   }
 }

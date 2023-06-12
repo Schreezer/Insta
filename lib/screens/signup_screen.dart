@@ -7,6 +7,9 @@ import "package:instagram/resources/auth_methos.dart";
 import "package:instagram/utils/colors.dart";
 // import "package:instagram/utils/colors.dart";
 import "../Widgets/text_field_input.dart";
+import "../responsive/moblie_screen_layout.dart";
+import "../responsive/responsive_layout_screen.dart";
+import "../responsive/web_screen_layout.dart";
 import "../utils/utils.dart";
 // import "assets/images/instagram_logo.svg";
 
@@ -23,6 +26,7 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _usernameController = TextEditingController();
   bool _visibility = false;
   Uint8List? _image;
+  bool _isLoading = false;
 
   @override
   void dispose() {
@@ -32,12 +36,48 @@ class _SignupScreenState extends State<SignupScreen> {
     _bioController.dispose();
     _usernameController.dispose();
   }
+
   void selectImage() async {
     Uint8List image = await pickImage(ImageSource.gallery);
-    setState((){
+    setState(() {
       _image = image;
     });
   }
+
+  void signupUser() async {
+    print(_isLoading);
+    setState(() {
+      _isLoading = true;
+    });
+    String res = await AuthMethods().signupUser(
+      mail: _emailController.text,
+      password: _passwordController.text,
+      bio: _bioController.text,
+      userName: _usernameController.text,
+      file: _image!,
+    );
+
+    setState(() {
+      _isLoading = false;
+    });
+    if (res != 'success') {
+      showSnackBar(res, context);
+    } else {
+      showSnackBar("Sign Up successful", context);
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+            builder: (context) => const ResponsiveLayout(
+                  mobileScreenLayout: MobileScreenLayout(),
+                  webScreenLayout: WebScreenLayout(),
+                )),
+      );
+    }
+  }
+
+  void navigateToLogin() {
+    Navigator.of(context).pop();
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
@@ -56,13 +96,18 @@ class _SignupScreenState extends State<SignupScreen> {
               //circular widget for profile picture
               const SizedBox(height: 24),
               Stack(children: [
-                CircleAvatar(
-                    radius: 50,
-                    backgroundImage: NetworkImage(
-                        "https://png.pngtree.com/png-vector/20191116/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_1992804.jpg")),
+                _image != null
+                    ? CircleAvatar(
+                        radius: 50,
+                        backgroundImage: MemoryImage(_image!),
+                      )
+                    : const CircleAvatar(
+                        radius: 50,
+                        backgroundImage: NetworkImage(
+                            "https://png.pngtree.com/png-vector/20191116/ourmid/pngtree-beautiful-admin-roles-line-vector-icon-png-image_1992804.jpg")),
                 Positioned(
-                  bottom: -10,
-                  left: 80,
+                  bottom: 0,
+                  left: 70,
                   child: IconButton(
                     onPressed: selectImage,
                     icon: const Icon(Icons.add_a_photo),
@@ -96,27 +141,24 @@ class _SignupScreenState extends State<SignupScreen> {
                 hintText: "Password (More than 6 characters)",
                 textInputType: TextInputType.text,
                 isPass: true,
+                visibility: false,
                 textEditingController: _passwordController,
               ),
 
               const SizedBox(height: 20),
               // Sign Up Button
               InkWell(
-                onTap: () async {
-                  String res = await AuthMethods().signupUser(
-                    mail: _emailController.text,
-                    password: _passwordController.text,
-                    bio: _bioController.text,
-                    userName: _usernameController.text,
-                    // Random Uint8List being input to file
-                  );
-                  // Your onTap code here
-                  print(res);
-                },
+                onTap: signupUser,
                 splashColor: const Color.fromARGB(
                     255, 145, 244, 175), // Custom splash color
                 child: Ink(
-                  child: const Center(child: Text("Sign Up")),
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Center(child: Text("Sign Up")),
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: const ShapeDecoration(
@@ -138,11 +180,17 @@ class _SignupScreenState extends State<SignupScreen> {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                 ),
                 const SizedBox(width: 3),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: const Text(
-                    "Log In",
-                    style: TextStyle(fontWeight: FontWeight.bold),
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: navigateToLogin,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: const Text(
+                        "Log In",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
                 ),
               ]),
