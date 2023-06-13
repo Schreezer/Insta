@@ -10,7 +10,6 @@ class AuthMethods {
 
   Future <model.User> getUserDetails () async {
     User currentUser = _auth.currentUser!;
-    print(currentUser);
     DocumentSnapshot snap = await _firestore.collection('users').doc(currentUser.uid).get();
     return  model.User.fromSnap(snap);
     }
@@ -19,7 +18,7 @@ class AuthMethods {
       required String password,
       required String bio,
       required String userName,
-      required Uint8List file}) async {
+      Uint8List? file}) async {
     String res = "Some Error Occured";
     try {
       if (mail.isNotEmpty &&
@@ -31,8 +30,16 @@ class AuthMethods {
         UserCredential cred = await _auth.createUserWithEmailAndPassword(
             email: mail, password: password);
         // add user to database
-        String photoUrl = await StorageMethods()
-            .uploadImageToStorage("profileImage", file, false);
+        
+        String photoUrl;
+
+        if (file == null) {
+          photoUrl = 'https://cdn.dribbble.com/users/6142/screenshots/5679189/media/1b96ad1f07feee81fa83c877a1e350ce.png?compress=1&resize=400x300&vertical=center';
+        } else {
+          photoUrl = await StorageMethods()
+              .uploadImageToStorage("profileImage", file, false);
+        }
+        print("the photo url is:");
         print(photoUrl);
         model.User user = model.User(
           email: mail,
@@ -81,6 +88,10 @@ class AuthMethods {
       res = _err.toString();
     }
     return res;
+  }
+
+  Future<void> signOut() async {
+    await _auth.signOut();
   }
 
   

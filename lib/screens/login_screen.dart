@@ -10,6 +10,7 @@ import "../resources/auth_methos.dart";
 import "../responsive/moblie_screen_layout.dart";
 import "../responsive/responsive_layout_screen.dart";
 import "../responsive/web_screen_layout.dart";
+import "../utils/global_variables.dart";
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -61,19 +62,28 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget build(BuildContext context) {
     return Scaffold(
-        body: SafeArea(
-      child: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32),
+      resizeToAvoidBottomInset: false,
+      body: SafeArea(
+        child: Container(
+          padding: MediaQuery.of(context).size.width > webScreenSize
+              ? EdgeInsets.symmetric(
+                  horizontal: MediaQuery.of(context).size.width / 3)
+              : const EdgeInsets.symmetric(horizontal: 32),
           width: double.infinity,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Flexible(flex: 2, child: Container()),
-              SvgPicture.asset(
-                "assets/ic_instagram.svg",
-                height: 45,
-                color: primaryColor,
-              ),
+              // SvgPicture.asset(
+              //   "assets/ic_instagram.svg",
+              //   height: 45,
+              //   color: primaryColor,
+              // ),
+              Text("Bountier",
+                  style: TextStyle(
+                      fontFamily: "jokerman",
+                      fontSize: 45,
+                      color: primaryColor)),
               const SizedBox(height: 64),
               TextFieldInput(
                 hintText: "Enter your E-mail",
