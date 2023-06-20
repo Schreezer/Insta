@@ -1,5 +1,3 @@
-import 'dart:io';
-import 'dart:typed_data';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -194,7 +192,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 : Image.memory(_file!),
           ]),
           _isLoading ? 
-          LinearProgressIndicator(): Container(),
+          const LinearProgressIndicator(): Container(),
           ]),
         ));
   }

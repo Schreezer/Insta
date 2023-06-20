@@ -101,7 +101,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                   child: TextField(
                     controller: commentEditingController,
                     decoration: InputDecoration(
-                      hintText: 'Comment as ${user!.userName}',
+                      hintText: 'Comment as ${user.userName}',
                       border: InputBorder.none,
                     ),
                   ),
@@ -109,7 +109,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
               ),
               InkWell(
                 onTap: () => postComment(
-                  user!.uid,
+                  user.uid,
                   user.userName,
                   user.photoUrl,
                 ),

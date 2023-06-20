@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:instagram/providers/user_provider.dart';
-import 'package:instagram/utils/colors.dart';
 import 'package:instagram/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
@@ -25,8 +24,8 @@ void initState() {
   WidgetsBinding.instance.addPostFrameCallback((_) => addData());
 }
   addData() async{
-    UserProvider _userProvider = Provider.of(context, listen:false);
-    await _userProvider.refreshUser();
+    UserProvider userProvider = Provider.of(context, listen:false);
+    await userProvider.refreshUser();
   
   }
   @override

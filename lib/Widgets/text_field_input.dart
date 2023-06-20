@@ -7,8 +7,8 @@ class TextFieldInput extends StatefulWidget {
   bool visibility;
   final TextInputType textInputType;
 
-  TextFieldInput({
-    Key? key,
+  TextFieldInput({super.key, 
+   
     required this.textEditingController,
     this.isPass = false,
     this.visibility = true,

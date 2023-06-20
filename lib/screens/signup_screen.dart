@@ -1,30 +1,30 @@
 import "dart:typed_data";
 
 import "package:flutter/material.dart";
-import "package:flutter_svg/flutter_svg.dart";
 import "package:image_picker/image_picker.dart";
 import "package:instagram/resources/auth_methos.dart";
+import "package:instagram/screens/login_screen.dart";
+import "package:instagram/screens/otp_screen.dart";
 import "package:instagram/utils/colors.dart";
 // import "package:instagram/utils/colors.dart";
 import "../Widgets/text_field_input.dart";
-import "../responsive/moblie_screen_layout.dart";
-import "../responsive/responsive_layout_screen.dart";
-import "../responsive/web_screen_layout.dart";
 import "../utils/utils.dart";
 // import "assets/images/instagram_logo.svg";
 
 class SignupScreen extends StatefulWidget {
+  const SignupScreen({super.key});
+
   @override
   State<SignupScreen> createState() => _SignupScreenState();
 }
 
 class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+  final TextEditingController _otpController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  bool _visibility = false;
+  final TextEditingController _phoneNumberController = TextEditingController();
+  final bool _visibility = false;
   Uint8List? _image;
   bool _isLoading = false;
 
@@ -32,7 +32,7 @@ class _SignupScreenState extends State<SignupScreen> {
   void dispose() {
     super.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
+    _otpController.dispose();
     _bioController.dispose();
     _usernameController.dispose();
   }
@@ -44,40 +44,82 @@ class _SignupScreenState extends State<SignupScreen> {
     });
   }
 
-  void signupUser() async {
-    print(_isLoading);
+  // the only button (to be clicked when the otp is to be sent, ie when the user has filled the first form)
+  void sendOtp() async {
     setState(() {
       _isLoading = true;
     });
-    String res = await AuthMethods().signupUser(
-      mail: _emailController.text,
-      password: _passwordController.text,
-      bio: _bioController.text,
-      userName: _usernameController.text,
-      file: _image,
-    );
-
+    String res = await AuthMethods().sendOtp(
+        _phoneNumberController.text,
+        _emailController.text,
+        _usernameController.text,
+        _bioController.text,
+        _image);
     setState(() {
       _isLoading = false;
     });
-    if (res != 'success') {
-      showSnackBar(res, context);
-    } else {
-      showSnackBar("Sign Up successful", context);
-      Navigator.of(context).pushReplacement(
+    print("the res here is: ");
+    print("the value of res is:$res");
+    // wait for 3 seconds
+    await Future.delayed(const Duration(seconds: 3));
+    if (res == 'code sent') {
+      Navigator.pushReplacement(
+        context,
         MaterialPageRoute(
-            builder: (context) => const ResponsiveLayout(
-                  mobileScreenLayout: MobileScreenLayout(),
-                  webScreenLayout: WebScreenLayout(),
-                )),
+          builder: (BuildContext context) => OtpScreen(),
+        ),
       );
     }
   }
+  // void signupUser() async {
+  //   print(_isLoading);
+  //   setState(() {
+  //     _isLoading = true;
+  //   });
+  //   String res = await AuthMethods().signupUser(
+  //     mail: _emailController.text,
+  //     otp: _otpController.text,
+  //     bio: _bioController.text,
+  //     userName: _usernameController.text,
+  //     file: _image,
+  //   );
+
+  //   setState(() {
+  //     _isLoading = false;
+  //   });
+  //   if (res != 'success') {
+  //     showSnackBar(res, context);
+  //   } else {
+  //     showSnackBar("Sign Up successful", context);
+  //     Navigator.of(context).pushReplacement(
+  //       MaterialPageRoute(
+  //           builder: (context) => const ResponsiveLayout(
+  //                 mobileScreenLayout: MobileScreenLayout(),
+  //                 webScreenLayout: WebScreenLayout(),
+  //               )),
+  //     );
+  //   }
+  // }
 
   void navigateToLogin() {
-    Navigator.of(context).pop();
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const LoginScreen(),
+      ),
+    );
   }
 
+  void navigateToOtp() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => OtpScreen(),
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         body: SafeArea(
@@ -88,10 +130,12 @@ class _SignupScreenState extends State<SignupScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Flexible(flex: 2, child: Container()),
-              SvgPicture.asset(
-                "assets/ic_instagram.svg",
-                height: 45,
-                color: primaryColor,
+              const Text(
+                "Bountier",
+                style: TextStyle(
+                  fontFamily: "Billabong",
+                  fontSize: 50,
+                ),
               ),
               //circular widget for profile picture
               const SizedBox(height: 24),
@@ -136,29 +180,29 @@ class _SignupScreenState extends State<SignupScreen> {
                 textEditingController: _emailController,
               ),
               const SizedBox(height: 24),
-              // Password TextField
+              // Phone numebr field:
               TextFieldInput(
-                hintText: "Password (More than 6 characters)",
-                textInputType: TextInputType.text,
-                isPass: true,
-                visibility: false,
-                textEditingController: _passwordController,
+                hintText: "Phone number with country code",
+                textInputType: TextInputType.phone,
+                textEditingController: _phoneNumberController,
               ),
+              const SizedBox(height: 24),
+              // Password TextField
+              // TextFieldInput(
+              //   hintText: "Password (More than 6 characters)",
+              //   textInputType: TextInputType.text,
+              //   isPass: true,
+              //   visibility: false,
+              //   textEditingController: _otpController,
+              // ),
 
               const SizedBox(height: 20),
               // Sign Up Button
               InkWell(
-                onTap: signupUser,
+                onTap: sendOtp,
                 splashColor: const Color.fromARGB(
                     255, 145, 244, 175), // Custom splash color
                 child: Ink(
-                  child: _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(
-                            color: Colors.white,
-                          ),
-                        )
-                      : const Center(child: Text("Sign Up")),
                   width: double.infinity,
                   padding: const EdgeInsets.symmetric(vertical: 12),
                   decoration: const ShapeDecoration(
@@ -169,6 +213,13 @@ class _SignupScreenState extends State<SignupScreen> {
                     ),
                     color: blueColor,
                   ),
+                  child: _isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
+                      : const Center(child: Text("Get OTP")),
                 ),
               ),
 
@@ -176,8 +227,8 @@ class _SignupScreenState extends State<SignupScreen> {
               Flexible(flex: 2, child: Container()),
               Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Container(
-                  child: const Text("Already have an Account?"),
                   padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: const Text("Already have an Account?"),
                 ),
                 const SizedBox(width: 3),
                 MouseRegion(

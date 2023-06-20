@@ -1,11 +1,9 @@
-import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Widgets/like_animation.dart';
 import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/utils/colors.dart';
-import 'package:instagram/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart' as model;
 import '../providers/user_provider.dart';
@@ -69,7 +67,7 @@ class _PostCardState extends State<PostCard> {
   Widget build(BuildContext context) {
     final model.User? user = Provider.of<UserProvider>(context).getUser;
     final width = MediaQuery.of(context).size.width;
-    String image_url =  widget.snap['photoUrl'].toString();
+    String imageUrl =  widget.snap['photoUrl'].toString();
     return Container(
       // boundary needed for web
       decoration: BoxDecoration(
@@ -180,7 +178,7 @@ class _PostCardState extends State<PostCard> {
                   width: double.infinity,
                   child: 
                   Image.network(
-                    image_url,
+                    imageUrl,
                     // fit: BoxFit.cover,
                   ),
                  
@@ -190,11 +188,6 @@ class _PostCardState extends State<PostCard> {
                   opacity: isLikeAnimating ? 1 : 0,
                   child: LikeAnimation(
                     isAnimating: isLikeAnimating,
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: 100,
-                    ),
                     duration: const Duration(
                       milliseconds: 400,
                     ),
@@ -203,6 +196,11 @@ class _PostCardState extends State<PostCard> {
                         isLikeAnimating = false;
                       });
                     },
+                    child: const Icon(
+                      Icons.favorite,
+                      color: Colors.white,
+                      size: 100,
+                    ),
                   ),
                 ),
               ],
@@ -265,11 +263,11 @@ class _PostCardState extends State<PostCard> {
                 DefaultTextStyle(
                     style: Theme.of(context)
                         .textTheme
-                        .subtitle2!
+                        .titleSmall!
                         .copyWith(fontWeight: FontWeight.w800),
                     child: Text(
                       '${widget.snap['likes'].length} likes',
-                      style: Theme.of(context).textTheme.bodyText2,
+                      style: Theme.of(context).textTheme.bodyMedium,
                     )),
                 Container(
                   width: double.infinity,
@@ -295,6 +293,7 @@ class _PostCardState extends State<PostCard> {
                 ),
                 InkWell(
                   child: Container(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
                     child: StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection("posts")
@@ -319,7 +318,6 @@ class _PostCardState extends State<PostCard> {
                         return Text("View all ${snapshot.data!.docs.length} comments");
                       },
                     ),
-                    padding: const EdgeInsets.symmetric(vertical: 4),
                   ),
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
@@ -331,6 +329,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 ),
                 Container(
+                  padding: const EdgeInsets.symmetric(vertical: 4),
                   child: Text(
                     DateFormat.yMMMd()
                         .format(widget.snap['datePublished'].toDate()),
@@ -338,7 +337,6 @@ class _PostCardState extends State<PostCard> {
                       color: secondaryColor,
                     ),
                   ),
-                  padding: const EdgeInsets.symmetric(vertical: 4),
                 ),
               ],
             ),

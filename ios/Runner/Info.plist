@@ -53,5 +53,15 @@
 	<string> Camera Usage</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string> Microphone Usage</string>
+	<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>com.googleusercontent.apps.152819163863-megdtj4hpi2qqifhtdmnk4cjvtr91p1q</string>
+    </array>
+  </dict>
+</array>
+
 </dict>
 </plist>

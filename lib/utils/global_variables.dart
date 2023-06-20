@@ -7,12 +7,21 @@ import "package:instagram/screens/search_screen.dart";
 
 const webScreenSize = 600;
 User? currentUser = FirebaseAuth.instance.currentUser;
+var VerificationId = '';
+var Bio = "";
+var UserName = "";
+var Mail = "";
+var PhoneNumber = "";
+var Imager;
+// ignore: non_constant_identifier_names, cast_from_null_always_fails
+UserCredential Cred = null as UserCredential;
 
 var homeScreenItems = [
-  FeedScreen(),
-  SearchScreen(),
-  AddPostScreen(),
-  Text("Favourite"),
+  const FeedScreen(),
+  const SearchScreen(),
+  const AddPostScreen(),
+  const Text("Favourite"),
+
   ProfileScreen(uid: currentUser!.uid),
 
 ];

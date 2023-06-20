@@ -15,7 +15,6 @@ class ProfileScreen extends StatefulWidget {
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
-
 class _ProfileScreenState extends State<ProfileScreen> {
   var userData = {};
   int postLen = 0;
@@ -128,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                   .pushReplacement(
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      LoginScreen(),
+                                                      const LoginScreen(),
                                                 ),
                                               );
                                             },
@@ -186,7 +185,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         child: Text(
                           userData['userName'],
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           ),
                         ),
