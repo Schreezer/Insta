@@ -12,22 +12,22 @@ class FeedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor:
-          width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
-      appBar: width > webScreenSize
-          ? null
-          : AppBar(
-          backgroundColor: mobileBackgroundColor,
-          // leading: const Icon(Icons.camera_alt_outlined),
-          title:
-              const Text("Bountier", style: TextStyle(fontFamily: "jokerman")),
-          actions: [
-            IconButton(
-              onPressed: () {},
-              icon: const Icon(Icons.chat_bubble_outline_rounded),
-            ),
-          ],
-        ),
+        backgroundColor:
+            width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
+        appBar: width > webScreenSize
+            ? null
+            : AppBar(
+                backgroundColor: mobileBackgroundColor,
+                // leading: const Icon(Icons.camera_alt_outlined),
+                title: const Text("Bountier",
+                    style: TextStyle(fontFamily: "jokerman")),
+                actions: [
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.chat_bubble_outline_rounded),
+                  ),
+                ],
+              ),
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("posts").snapshots(),
           builder: (context,
@@ -41,7 +41,7 @@ class FeedScreen extends StatelessWidget {
               itemBuilder: (context, index) => Container(
                 margin: EdgeInsets.symmetric(
                   vertical: width > webScreenSize ? 15 : 0,
-                  horizontal: width > webScreenSize ? width*0.3 : 0,
+                  horizontal: width > webScreenSize ? width * 0.3 : 0,
                 ),
                 child: PostCard(
                   snap: snapshot.data!.docs[index].data(),
