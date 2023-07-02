@@ -8,7 +8,7 @@ class User {
   final String photoUrl;
   final List followers;
   final List following;
-  final int token;
+  final int tokens;
 
   const User({
     required this.email,
@@ -18,8 +18,33 @@ class User {
     required this.photoUrl,
     required this.followers,
     required this.following,
-    required this.token,
+    required this.tokens,
   });
+
+
+  @override
+  bool operator ==(Object other) =>
+    identical(this, other) ||
+    other is User && runtimeType == other.runtimeType &&
+    email == other.email &&
+    uid == other.uid &&
+    userName == other.userName &&
+    bio == other.bio &&
+    photoUrl == other.photoUrl &&
+    followers == other.followers &&
+    following == other.following &&
+    tokens == other.tokens;
+
+  @override
+  int get hashCode =>
+    email.hashCode ^
+    uid.hashCode ^
+    userName.hashCode ^
+    bio.hashCode ^
+    photoUrl.hashCode ^
+    followers.hashCode ^
+    following.hashCode ^
+    tokens.hashCode;
 
   Map<String, dynamic> toJson() => {
         'email': email,
@@ -29,12 +54,12 @@ class User {
         "photoUrl": photoUrl,
         'followers': followers,
         'following': following,
-        'tokens': token,
+        'tokens': tokens,
       };
 
   static User fromSnap(DocumentSnapshot snap) {
     
-    print(snap.data());
+    // print(snap.data());
     var snapshot = snap.data() as Map<String, dynamic>;
     return User(
       email: snapshot['email'] ?? '',
@@ -44,7 +69,7 @@ class User {
       photoUrl: snapshot['photoUrl'] ?? '',
       followers: snapshot['followers'] ?? [],
       following: snapshot['following'] ?? [],
-      token: snapshot['tokens'] ?? 0,
+      tokens: snapshot['tokens'] ?? 0,
     );
   }
 }

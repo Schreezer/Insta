@@ -7,30 +7,35 @@ import 'package:instagram/responsive/moblie_screen_layout.dart';
 import 'package:instagram/responsive/responsive_layout_screen.dart';
 import 'package:instagram/responsive/web_screen_layout.dart';
 import 'package:instagram/screens/landing_scree.dart';
-import 'package:instagram/screens/phone_login.dart';
 import 'package:instagram/screens/signup_screen.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:instagram/utils/global_variables.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
-    await dotenv.load(fileName: "../.env");
+    // await dotenv.load(fileName: "../.env");
+    // await Firebase.initializeApp(
+    //     options: FirebaseOptions(
+    //   apiKey: dotenv.env['apiKey'] ?? '',
+    //   appId: dotenv.env['appId'] ?? '',
+    //   messagingSenderId: dotenv.env['measurementId'] ?? '',
+    //   projectId: dotenv.env['projectId'] ?? '',
+    //   storageBucket: dotenv.env['storageBucket'] ?? '',
+    // ));
+
     await Firebase.initializeApp(
         options: FirebaseOptions(
-      apiKey: dotenv.env['apiKey'] ?? '',
-      appId: dotenv.env['appId'] ?? '',
-      messagingSenderId: dotenv.env['measurementId'] ?? '',
-      projectId: dotenv.env['projectId'] ?? '',
-      storageBucket: dotenv.env['storageBucket'] ?? '',
+      apiKey: 'AIzaSyBnpB5N6qkLDPKSp_FlpuSj3lkTXnUvWfE',
+      appId: '1:152819163863:web:b9083c5b7ab98b1aa50692',
+      messagingSenderId: '152819163863',
+      projectId: 'instagram-a7218',
+      storageBucket: 'instagram-a7218.appspot.com',
     ));
-    
   } else {
     await Firebase.initializeApp();
-
   }
 
   runApp(const MyApp());
@@ -57,10 +62,10 @@ class MyApp extends StatelessWidget {
             builder: (context, snapshot) {
               final userProvider =
                   Provider.of<UserProvider>(context, listen: true);
-              userProvider.refreshUser();
 
+              userProvider.refreshUser(true);
+              // print("hello");
               if (snapshot.connectionState == ConnectionState.active) {
-              
                 if (snapshot.hasData) {
                   if (userProvider.getUser != null) {
                     return const ResponsiveLayout(

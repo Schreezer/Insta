@@ -91,35 +91,14 @@ class _LandingScreenState extends State<LandingScreen> {
                                     );
                                   },
                                   child: const Text(
-                                    'Log in',
+                                    'Enter',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                     ),
                                   ),
                                 ),
-                                const SizedBox(width: 25),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(250, 50),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const SignupScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Create Account',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
+
                               ],
                             ),
                           )
@@ -139,29 +118,11 @@ class _LandingScreenState extends State<LandingScreen> {
                                   fixedSize: const Size(150, 30),
                                 ),
                                 child: const Text(
-                                  'Log in',
+                                  'Enter',
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
-                              const SizedBox(height: 15),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const SignupScreen(),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: const Size(150, 30),
-                                ),
-                                child: const Text(
-                                  'Create Account',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
+
                             ],
                           ),
                   ),

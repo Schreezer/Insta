@@ -1,14 +1,21 @@
+// import 'dart:ffi';
+import 'dart:typed_data';
+// import 'dart:ui';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram/models/user.dart';
 import 'package:instagram/providers/user_provider.dart';
 import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:instagram/utils/utils.dart';
+import 'package:intl/date_time_patterns.dart';
 // import 'package:instagram/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
 
 import '../Widgets/comment_card.dart';
+import '../models/post.dart';
 
 class CommentsScreen extends StatefulWidget {
   final postId;
@@ -21,6 +28,64 @@ class CommentsScreen extends StatefulWidget {
 class _CommentsScreenState extends State<CommentsScreen> {
   final TextEditingController commentEditingController =
       TextEditingController();
+  List<Uint8List> pics = [];
+  List<Uint8List> upload_images = [];
+
+  _selectImage(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text("Add a Photo"),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.camera_alt),
+              title: const Text("Photo with Camera"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                Uint8List file = await pickImage(ImageSource.camera);
+                setState(() {
+                  upload_images.add(file);
+                });
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text("Image from Gallery"),
+              onTap: () async {
+                Navigator.of(context).pop();
+                Uint8List file = await pickImage(ImageSource.gallery);
+                setState(() {
+                  upload_images.add(file);
+                  // _file = file;
+                });
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            child: const Text("Cancel"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void clearImage() {
+    setState(() {
+      // _file = null;
+      upload_images.clear();
+    });
+  }
+
+  void clearImageAtIndex(int index) {
+    setState(() {
+      upload_images.removeAt(index);
+    });
+  }
 
   void postComment(String uid, String name, String profilePic) async {
     try {
@@ -30,15 +95,20 @@ class _CommentsScreenState extends State<CommentsScreen> {
         uid,
         name,
         profilePic,
+        upload_images,
       );
 
       if (res != 'success') {
         // ignore: use_build_context_synchronously
-        showSnackBar(res,context);
+        showSnackBar(res, context);
+      } else {
+        // ignore: use_build_context_synchronously
+        showSnackBar('Comment posted successfully', context);
+        clearImage();
+        setState(() {
+          commentEditingController.text = "";
+        });
       }
-      setState(() {
-        commentEditingController.text = "";
-      });
     } catch (err) {
       showSnackBar(
         err.toString(),
@@ -47,10 +117,24 @@ class _CommentsScreenState extends State<CommentsScreen> {
     }
   }
 
+  Future<Post> fact() async {
+    DocumentSnapshot post = await FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.postId)
+        .get();
+  
+    print(
+        "here i am speaking from the ocmment_screen, the value of the post is : ${(post.data() as Map<String, dynamic>)['uid']}");
+    // var passer = Post(bounty: 10 , description: "helo" , uid: "much wow" , userName: "batm" , postId: "1213" ,photoUrl: ["http://picum.com"] , datePublished: "much wow" , likes:[] ,  profImage: "afwa");
+    final passer = Post.fromSnap(post);
+  
+    return passer;
+  }
+
   @override
   Widget build(BuildContext context) {
     final User? user = Provider.of<UserProvider>(context).getUser;
-
+    
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
@@ -73,13 +157,74 @@ class _CommentsScreenState extends State<CommentsScreen> {
               child: CircularProgressIndicator(),
             );
           }
+          else if (snapshot.hasError) {
+            return const Center(
+              child: Text('Something went wrong'),
+            );
+          }
+          else if(snapshot.hasData == false){
+            print(snapshot.data!.docs.length);
+            print("the length of upload images is:${upload_images.isEmpty} ");
+            return const Center(
+              child: Text('No comments yet'),
+            );
+          }
+          
+          else if (snapshot.data!.docs.length == 0) {
+            return const Center(
+              child: Text('No comments yet'),
+            );
+          }
 
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (ctx, index) => CommentCard(
-              snap: snapshot.data!.docs[index],
-            ),
-          );
+          // if(user!.uid == )
+          // bool factuals = fact(user!.uid) as bool;
+          
+          if (upload_images.isEmpty) {
+            return 
+            // Text(" this is workingn atleast, user id is : ${user!.uid} and the length of snapshot data is : ${snapshot.data!.docs.length}");
+            // print("helo");
+            ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (ctx, index) => CommentCard(
+                snap: snapshot.data!.docs[index],
+                post: fact(),
+                // Future.value(Post(bounty: 10 , description: "helo" , uid: "much wow" , userName: "batm" , postId: "1213" ,photoUrl: ["http://picum.com"] , datePublished: "much wow" , likes:[] ,  profImage: "afwa")),
+                
+              ),
+             
+                
+            );
+             // fact(),
+          } else {
+            return
+            //  Text("hello");
+
+            Align(
+              alignment: Alignment.bottomLeft,
+              child: ListView.builder(
+                itemCount: upload_images.length,
+                scrollDirection: Axis.horizontal,
+                itemBuilder: (ctx, index) => Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Stack(children: [
+                    Container(
+                      height: 300,
+                      width: 300,
+                      child: Image.memory(upload_images[index]),
+                    ),
+                    Positioned(
+                      top: 0,
+                      right: 0,
+                      child: IconButton(
+                        icon: Icon(Icons.close),
+                        onPressed: () => clearImageAtIndex(index),
+                      ),
+                    ),
+                  ]),
+                ),
+              ),
+            );
+          }
         },
       ),
       // text input
@@ -106,6 +251,16 @@ class _CommentsScreenState extends State<CommentsScreen> {
                     ),
                   ),
                 ),
+              ),
+              GestureDetector(
+                onTap: () => _selectImage(context),
+                child: Icon(
+                  Icons.add_a_photo,
+                  color: Colors.blue,
+                ),
+              ),
+              const SizedBox(
+                width: 8,
               ),
               InkWell(
                 onTap: () => postComment(

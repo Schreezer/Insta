@@ -1,6 +1,7 @@
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:instagram/screens/add_post_screen.dart";
+import "package:instagram/screens/favourites.dart";
 import "package:instagram/screens/feed_screen.dart";
 import "package:instagram/screens/profile_screen.dart";
 import "package:instagram/screens/search_screen.dart";
@@ -19,11 +20,17 @@ bool signedUp = false;
 UserCredential Cred = null as UserCredential;
 
 var homeScreenItems = [
-  const FeedScreen(),
-  const SearchScreen(),
-  const AddPostScreen(),
-  const Text("Favourite"),
+  // Text("Home"),
+  // Text("Search"),
+  // Text("Add Post"),
+  // Text("Favourite"),
+  // Text("Profile"),
 
+  const FeedScreen(),
+  // const SearchScreen(),
+  // const Placeholder(),
+  const AddPostScreen(),
+  // const favouriteScreen(),
   ProfileScreen(uid: currentUser!.uid),
 
 ];

@@ -7,9 +7,30 @@ class UserProvider with ChangeNotifier {
   User? _user;
   final AuthMethods _authMethods = AuthMethods();
   User? get getUser => _user;
-  Future <void> refreshUser() async {
+  Future <void> refreshUser(bool internal) async {
     User? user = await _authMethods.getUserDetails();
-    _user = user;
-    notifyListeners();
+    if(internal){
+    if (_user==null) {
+      _user = user;
+      // print("new user");
+
+      notifyListeners();
+    }
+    }
+    else{
+      _user = user;
+      // print("new user");
+
+      notifyListeners();
+    }
+    // if(_user==user){
+    //   return;
+    // }
+    // else{
+    //   _user = user;
+    //   notifyListeners();
+    // }
+    // print(user.uid);
   }
+
 }
