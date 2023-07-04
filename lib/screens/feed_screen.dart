@@ -1,5 +1,6 @@
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
+import "package:instagram/Widgets/hell.dart";
 import "package:instagram/Widgets/post_card.dart";
 import "package:instagram/utils/colors.dart";
 
@@ -21,32 +22,40 @@ class FeedScreen extends StatelessWidget {
                 // leading: const Icon(Icons.camera_alt_outlined),
                 title: const Text("Bountier",
                     style: TextStyle(fontFamily: "jokerman")),
-                actions: [
-                  IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.chat_bubble_outline_rounded),
-                  ),
-                ],
+                // actions: [
+                //   IconButton(
+                //     onPressed: () {},
+                //     icon: const Icon(Icons.chat_bubble_outline_rounded),
+                //   ),
+                // ],
               ),
         body: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection("posts").snapshots(),
+          stream: FirebaseFirestore.instance.collection("posts").orderBy("bounty", descending: true).snapshots(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
+            // Future.delayed(Duration(seconds: 3), () {
+            //   print(snapshot.connectionState);
+            // });
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             }
+            // print("hello");
 
             return ListView.builder(
+            
+              shrinkWrap: true,
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) => Container(
                 margin: EdgeInsets.symmetric(
                   vertical: width > webScreenSize ? 15 : 0,
                   horizontal: width > webScreenSize ? width * 0.3 : 0,
                 ),
-                child: PostCard(
+                child:
+                PostCard(
                   snap: snapshot.data!.docs[index].data(),
                 ),
               ),
+              
             );
           },
         ));

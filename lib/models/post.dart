@@ -1,16 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:instagram/models/comment.dart';
 
 class Post {
   final String description;
   final String uid;
   final String userName;
   final String postId;
-  final String photoUrl;
+  final List<dynamic> photoUrl;
   final datePublished;
   final likes;
   final String profImage;
+  final int bounty;
+  List<Comment> comments ;
 
-  const Post({
+  Post({
+    required this.bounty,
     required this.description,
     required this.uid,
     required this.userName,
@@ -19,11 +23,13 @@ class Post {
     required this.datePublished,
     required this.likes,
     required this.profImage,
+    this.comments = const [],
   });
 
   Map<String, dynamic> toJson() => {
         'description': description,
         'uid': uid,
+        'bounty': bounty,
         'userName': userName,
         'postId': postId,
         "photoUrl": photoUrl,
@@ -37,12 +43,13 @@ class Post {
     return Post(
       description: snapshot['description'] ?? '',
       uid: snapshot['uid'] ?? '',
+      bounty: snapshot['bounty'] ?? 0,
       userName: snapshot['userName'] ?? '',
       postId: snapshot['postId'] ?? '',
-      photoUrl: snapshot['photoUrl'] ?? '',
-      datePublished: snapshot['datePublished'] ?? [],
+      photoUrl: snapshot['photoUrl'] ?? [],
+      datePublished: snapshot['datePublished'] ?? '',
       likes: snapshot['likes'] ?? [],
-      profImage: snapshot['profImage'] ?? [],
+      profImage: snapshot['profImage'] ?? '',
     );
   }
 }

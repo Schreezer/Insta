@@ -1,6 +1,6 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:instagram/Widgets/image_grid.dart';
 import 'package:instagram/Widgets/like_animation.dart';
 import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/utils/colors.dart';
@@ -11,6 +11,8 @@ import '../screens/comment_screen.dart';
 import '../utils/global_variables.dart';
 import '../utils/utils.dart';
 import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:ui';
 
 class PostCard extends StatefulWidget {
   final snap;
@@ -26,6 +28,7 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   int commentLen = 0;
   bool isLikeAnimating = false;
+  bool isExpanded = false;
 
   @override
   void initState() {
@@ -65,9 +68,10 @@ class _PostCardState extends State<PostCard> {
 
   @override
   Widget build(BuildContext context) {
+    // print("i got built again");
     final model.User? user = Provider.of<UserProvider>(context).getUser;
     final width = MediaQuery.of(context).size.width;
-    String imageUrl =  widget.snap['photoUrl'].toString();
+    List<String> images = List<String>.from(widget.snap['photoUrl']);
     return Container(
       // boundary needed for web
       decoration: BoxDecoration(
@@ -81,7 +85,45 @@ class _PostCardState extends State<PostCard> {
       ),
       child: Column(
         children: [
-          // HEADER SECTION OF THE POST
+          // Bounty Section
+          Container(
+            height: 30,
+            padding: EdgeInsets.symmetric(
+              vertical: 4,
+              horizontal: 16,
+            ).copyWith(right: 0),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: DefaultTextStyle.of(context).style,
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: 'BOUNTY: ',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      TextSpan(
+                        text: '${widget.snap['bounty']} BNT',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Poster SECTION OF THE POST
           Container(
             padding: const EdgeInsets.symmetric(
               vertical: 4,
@@ -116,96 +158,151 @@ class _PostCardState extends State<PostCard> {
                 ),
                 widget.snap['uid'].toString() == user?.uid
                     ? IconButton(
-                        onPressed: () {
-                          showDialog(
-                            useRootNavigator: false,
-                            context: context,
-                            builder: (context) {
-                              return Dialog(
-                                child: ListView(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 16),
-                                    shrinkWrap: true,
-                                    children: [
-                                      'Delete',
-                                    ]
-                                        .map(
-                                          (e) => InkWell(
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 12,
-                                                        horizontal: 16),
-                                                child: Text(e),
-                                              ),
-                                              onTap: () {
-                                                deletePost(
-                                                  widget.snap['postId']
-                                                      .toString(),
-                                                );
-                                                // remove the dialog box
-                                                Navigator.of(context).pop();
-                                              }),
-                                        )
-                                        .toList()),
-                              );
-                            },
-                          );
-                        },
                         icon: const Icon(Icons.more_vert),
-                      )
+                        onPressed: () {
+                          showSnackBar(
+                              "What the fuck do you want here?", context);
+                        }
+                        // showDialog(
+                        //   useRootNavigator: false,
+                        //   context: context,
+                        //   builder: (context) {
+                        // return
+                        // Dialog(
+                        //   child: ListView(
+                        //       padding: const EdgeInsets.symmetric(
+                        //           vertical: 16),
+                        //       shrinkWrap: true,
+                        //       children: [
+                        //         'Delete',
+                        //       ]
+                        //           .map(
+                        //             (e) => InkWell(
+                        //                 child: Container(
+                        //                   padding:
+                        //                       const EdgeInsets.symmetric(
+                        //                           vertical: 12,
+                        //                           horizontal: 16),
+                        //                   child: Text(e),
+                        //                 ),
+                        //                 onTap: () {
+                        //                   // deletePost(
+                        //                   //   widget.snap['postId']
+                        //                   //       .toString(),
+                        //                   // );
+                        //                   // // remove the dialog box
+                        //                   // Navigator.of(context).pop();
+                        //                   showSnackBar("This is not ready yet", context);
+                        //                 }),
+                        //           )
+                        //           .toList()),
+                        // );
+                        //       },
+                        //     );
+                        //   },
+                        //   icon: const Icon(Icons.more_vert),
+                        // )
+                        )
                     : Container(),
               ],
             ),
           ),
-          // IMAGE SECTION OF THE POST
-          GestureDetector(
-            onDoubleTap: () async {
-              await FirestoreMethods().likePost(
-                widget.snap['postId'].toString(),
-                user!.uid,
-                widget.snap['likes'],
-              );
-              setState(() {
-                isLikeAnimating = true;
-              });
-            },
-            child: Stack(
-              alignment: Alignment.center,
+          // Description Section of the Bounty
+          Container(
+            padding: const EdgeInsets.symmetric(
+              vertical: 4,
+              horizontal: 16,
+            ).copyWith(right: 0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.35,
-                  width: double.infinity,
-                  child: 
-                  Image.network(
-                    imageUrl,
-                    // fit: BoxFit.cover,
-                  ),
-                 
+                // Description Row
+                Row(
+                  children: [
+                    Text(
+                      "Desciption:",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Color.fromARGB(208, 57, 239, 230)),
+                    ),
+                    Expanded(child: Container()),
+                    Text(
+                      DateFormat.yMMMd()
+                          .format(widget.snap['datePublished'].toDate()),
+                      // "hell",
+                      style: const TextStyle(
+                        color: secondaryColor,
+                      ),
+                    ),
+                  ],
                 ),
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: isLikeAnimating ? 1 : 0,
-                  child: LikeAnimation(
-                    isAnimating: isLikeAnimating,
-                    duration: const Duration(
-                      milliseconds: 400,
-                    ),
-                    onEnd: () {
-                      setState(() {
-                        isLikeAnimating = false;
-                      });
-                    },
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.white,
-                      size: 100,
-                    ),
-                  ),
+                SizedBox(
+                  height: 8,
+                ),
+                isExpanded == false &&
+                        widget.snap['description'].toString().length > 200
+                    ? GestureDetector(
+                      onTap: ()=>  setState(() {
+                        isExpanded = !isExpanded;
+                      }),
+                      child: Text(
+                          widget.snap['description']
+                                  .toString()
+                                  .substring(0, 200) +
+                              "Show More...",
+                          style: const TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                    )
+                    : Text(widget.snap['description'].toString()),
+                const SizedBox(
+                  height: 4,
                 ),
               ],
             ),
           ),
+          // ImageGrid(images: images),
+
+          // IMAGE SECTION OF THE POST
+
+          // display the image thumbnails in a horizontal list view, and on click, display the image in a dialog box
+          Text("Attachments: ", style: TextStyle(fontWeight: FontWeight.bold)),
+          Container(
+            height: MediaQuery.of(context).size.height * 0.15,
+            width: double.infinity,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemCount: images.length,
+              itemBuilder: (context, index) {
+                print(images[index]);
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => ImageFullScreen(
+                          images: images,
+                          initialIndex: index,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    width: MediaQuery.of(context).size.height * 0.1,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    child: Image.network(
+                      images[index],
+                    ),
+                  ),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return SizedBox(width: 10); // change this to the desired width
+              },
+            ),
+          ),
+
           // LIKE, COMMENT SECTION OF THE POST
           Row(
             children: <Widget>[
@@ -215,11 +312,11 @@ class _PostCardState extends State<PostCard> {
                 child: IconButton(
                   icon: widget.snap['likes'].contains(user?.uid)
                       ? const Icon(
-                          Icons.favorite,
+                          Icons.thumb_up_sharp,
                           color: Colors.red,
                         )
                       : const Icon(
-                          Icons.favorite_border,
+                          Icons.thumbs_up_down_outlined,
                         ),
                   onPressed: () async {
                     await FirestoreMethods().likePost(
@@ -240,11 +337,11 @@ class _PostCardState extends State<PostCard> {
                   ),
                 )),
               ),
-              IconButton(
-                  icon: const Icon(
-                    Icons.send,
-                  ),
-                  onPressed: () {}),
+              // IconButton(
+              //     icon: const Icon(
+              //       Icons.send,
+              //     ),
+              //     onPressed: () {}),
               Expanded(
                   child: Align(
                 alignment: Alignment.bottomRight,
@@ -254,47 +351,49 @@ class _PostCardState extends State<PostCard> {
             ],
           ),
           //DESCRIPTION AND NUMBER OF COMMENTS
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                DefaultTextStyle(
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleSmall!
-                        .copyWith(fontWeight: FontWeight.w800),
-                    child: Text(
-                      '${widget.snap['likes'].length} likes',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    )),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(
-                    top: 8,
-                  ),
-                  child: RichText(
-                    text: TextSpan(
-                      style: const TextStyle(color: primaryColor),
-                      children: [
-                        TextSpan(
-                          text: widget.snap['userName'].toString(),
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextSpan(
-                          text: ' ${widget.snap['description']}',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                InkWell(
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(vertical: 4),
-                    child: StreamBuilder(
+
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Column(
+                // mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  DefaultTextStyle(
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleSmall!
+                          .copyWith(fontWeight: FontWeight.w800),
+                      child: Text(
+                        '${widget.snap['likes'].length} likes',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      )),
+                  // Container(
+                  //   width: double.infinity,
+                  //   padding: const EdgeInsets.only(
+                  //     top: 8,
+                  //   ),
+                  //   child: RichText(
+                  //     text: TextSpan(
+                  //       style: const TextStyle(color: primaryColor),
+                  //       children: [
+                  //         TextSpan(
+                  //           text: widget.snap['userName'].toString(),
+                  //           style: const TextStyle(
+                  //             fontWeight: FontWeight.bold,
+                  //           ),
+                  //         ),
+                  //         // TextSpan(
+                  //         //   text: ' ${widget.snap['description']}',
+                  //         // ),
+                  //       ],
+                  //     ),
+                  //   ),
+                  // ),
+                  InkWell(
+                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                       stream: FirebaseFirestore.instance
                           .collection("posts")
                           .doc(widget.snap["postId"])
@@ -303,42 +402,46 @@ class _PostCardState extends State<PostCard> {
                       builder: (context,
                           AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
                               snapshot) {
+                        // print("snapshot.connectionState");
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
                         }
-
-                        // return ListView.builder(
-                        //   itemCount: snapshot.data!.docs.length,
-                        //   itemBuilder: (context, index) => CommentCard(
-                        //     snap: snapshot.data!.docs[index].data(),
-                        //   ),
-                        // );
-                        return Text("View all ${snapshot.data!.docs.length} comments");
+                        if (snapshot.hasError) {
+                          return Text("Something went wrong");
+                        }
+                        if (snapshot.hasData && snapshot.data != null) {
+                          return Text(
+                              "View all ${snapshot.data!.docs.length} comments");
+                        } else {
+                          return CircularProgressIndicator();
+                        }
                       },
                     ),
-                  ),
-                  onTap: () => Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => CommentsScreen(
-                        postId: widget.snap['postId'].toString(),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => CommentsScreen(
+                          postId: widget.snap['postId'].toString(),
+                        ),
+                        // Placeholder(),
                       ),
-                      // Placeholder(),
                     ),
                   ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text(
-                    DateFormat.yMMMd()
-                        .format(widget.snap['datePublished'].toDate()),
-                    style: const TextStyle(
-                      color: secondaryColor,
-                    ),
-                  ),
-                ),
-              ],
+                  // Container(
+                  //   padding: const EdgeInsets.symmetric(vertical: 4),
+                  //   child: Text(
+                  //     DateFormat.yMMMd()
+                  //         .format(widget.snap['datePublished'].toDate()),
+                  //     // "hell",
+                  //     style: const TextStyle(
+                  //       color: secondaryColor,
+                  //     ),
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
           )
         ],

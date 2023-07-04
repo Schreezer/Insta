@@ -3,17 +3,12 @@ import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:instagram/Widgets/standard_button.dart";
 import "package:instagram/screens/signup_screen.dart";
-import "package:instagram/utils/colors.dart";
 import "package:instagram/utils/utils.dart";
 import "package:provider/provider.dart";
-// import "package:instagram/utils/colors.dart";
 import "../Widgets/text_field_input.dart";
-// import "assets/images/instagram_logo.svg";
+import "../main.dart";
 import "../providers/user_provider.dart";
 import "../resources/auth_methos.dart";
-import "../responsive/moblie_screen_layout.dart";
-import "../responsive/responsive_layout_screen.dart";
-import "../responsive/web_screen_layout.dart";
 import "../utils/global_variables.dart";
 
 class LoginScreen extends StatefulWidget {
@@ -71,10 +66,9 @@ class _LoginScreenState extends State<LoginScreen> {
       final snapshot =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
-      Provider.refreshUser();
-
       if (snapshot == null || !snapshot.exists) {
         if (!context.mounted) return;
+        Provider.refreshUser(false);
         PhoneNumber = _phoneNumberController.text;
         Navigator.pushReplacement(
           context,
@@ -83,9 +77,13 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
         );
       } else {
-        print("login screen popped");
         if (!context.mounted) return;
-        Navigator.of(context).pop();
+        Provider.refreshUser(false);
+        Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => MyApp(),
+            ));
       }
     } else {
       if (!context.mounted) return;
@@ -107,8 +105,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userProvider =
-                  Provider.of<UserProvider>(context, listen: false);
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -137,7 +134,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 64),
                   TextFieldInput(
-                    hintText: "Enter your Phone Number",
+                    hintText: "Enter your Phone Number with country code",
                     textInputType: TextInputType.emailAddress,
                     textEditingController: _phoneNumberController,
                   ),
@@ -162,26 +159,26 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   const SizedBox(height: 12),
                   Flexible(flex: 2, child: Container()),
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      child: const Text("Don't have an account?"),
-                    ),
-                    const SizedBox(width: 3),
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: navigateToSignup,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 8),
-                          child: const Text(
-                            "Create Account",
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ]),
+                  // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+                  //   Container(
+                  //     padding: const EdgeInsets.symmetric(vertical: 8),
+                  //     child: const Text("Don't have an account?"),
+                  //   ),
+                  //   const SizedBox(width: 3),
+                  //   MouseRegion(
+                  //     cursor: SystemMouseCursors.click,
+                  //     child: GestureDetector(
+                  //       onTap: navigateToSignup,
+                  //       child: Container(
+                  //         padding: const EdgeInsets.symmetric(vertical: 8),
+                  //         child: const Text(
+                  //           "Create Account",
+                  //           style: TextStyle(fontWeight: FontWeight.bold),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ]),
                 ], // Children of Column
               )),
         ));

@@ -3,9 +3,9 @@ import "dart:typed_data";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:image_picker/image_picker.dart";
+import "package:instagram/main.dart";
 import "package:instagram/resources/auth_methos.dart";
 import "package:instagram/screens/login_screen.dart";
-import "package:instagram/screens/otp_screen.dart";
 import "package:instagram/utils/colors.dart";
 import "package:provider/provider.dart";
 // import "package:instagram/utils/colors.dart";
@@ -26,9 +26,8 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _otpController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _phoneNumberController = TextEditingController();
-  FirebaseAuth _auth = FirebaseAuth.instance;
-  final bool _visibility = false;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
   Uint8List? _image;
   bool _isLoading = false;
 
@@ -47,104 +46,36 @@ class _SignupScreenState extends State<SignupScreen> {
       _image = image;
     });
   }
-  
 
-  String Next(){
-    
+  Future<String> Next() async {
+    String result;
     setState(() {
       _isLoading = true;
-    }); 
-    Future res = AuthMethods().signupUser(mail: _emailController.text, bio: _bioController.text, userName: _usernameController.text ,phoneNumber: _auth.currentUser!.phoneNumber.toString(), uid: _auth.currentUser!.uid, file: _image);
-    if(res == 'success'){
-      showSnackBar(res.toString(), context);
+    });
+    try {
+      result = await AuthMethods().signupUser(
+          mail: _emailController.text,
+          bio: _bioController.text,
+          userName: _usernameController.text,
+          phoneNumber: _auth.currentUser!.phoneNumber.toString(),
+          uid: _auth.currentUser!.uid,
+          file: _image);
+    } catch (e) {
+      print(e);
+      result = 'error';
     }
-    else{
-      showSnackBar(res.toString(), context);
-    }
+    showSnackBar(result, context);
     setState(() {
-        _isLoading = false;
-      });
-      return res.toString();
+      _isLoading = false;
+    });
+    return result;
   }
-
-
-
-
-  // the only button (to be clicked when the otp is to be sent, ie when the user has filled the first form)
-  // void sendOtp() async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   String res = await AuthMethods().sendOtp(
-  //       _phoneNumberController.text,
-  //       _emailController.text,
-  //       _usernameController.text,
-  //       _bioController.text,
-  //       _image);
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  //   print("the res here is: ");
-  //   print("the value of res is:$res");
-  //   // wait for 3 seconds
-  //   await Future.delayed(const Duration(seconds: 3));
-  //   if (res == 'code sent') {
-  //     Navigator.pushReplacement(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (BuildContext context) => OtpScreen(),
-  //       ),
-  //     );
-  //   }
-  // }
-
-
-  // void signupUser() async {
-  //   print(_isLoading);
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   String res = await AuthMethods().signupUser(
-  //     mail: _emailController.text,
-  //     otp: _otpController.text,
-  //     bio: _bioController.text,
-  //     userName: _usernameController.text,
-  //     file: _image,
-  //   );
-
-  //   setState(() {
-  //     _isLoading = false;
-  //   });
-  //   if (res != 'success') {
-  //     showSnackBar(res, context);
-  //   } else {
-  //     showSnackBar("Sign Up successful", context);
-  //     Navigator.of(context).pushReplacement(
-  //       MaterialPageRoute(
-  //           builder: (context) => const ResponsiveLayout(
-  //                 mobileScreenLayout: MobileScreenLayout(),
-  //                 webScreenLayout: WebScreenLayout(),
-  //               )),
-  //     );
-  //   }
-  // }
 
   void navigateToLogin() {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
         builder: (BuildContext context) => const LoginScreen(),
-      ),
-    );
-  }
-  void check(){
-    print(_auth.currentUser!.phoneNumber.toString());
-  }
-  void navigateToOtp() {
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (BuildContext context) => OtpScreen(),
       ),
     );
   }
@@ -211,31 +142,23 @@ class _SignupScreenState extends State<SignupScreen> {
                 textEditingController: _emailController,
               ),
               const SizedBox(height: 24),
-              // Phone numebr field:
-              // TextFieldInput(
-              //   hintText: "Phone number with country code",
-              //   textInputType: TextInputType.phone,
-              //   textEditingController: _phoneNumberController,
-              // ),
-              // const SizedBox(height: 24),
-              // Password TextField
-              // TextFieldInput(
-              //   hintText: "Password (More than 6 characters)",
-              //   textInputType: TextInputType.text,
-              //   isPass: true,
-              //   visibility: false,
-              //   textEditingController: _otpController,
-              // ),
 
               const SizedBox(height: 20),
               // Sign Up Button
               InkWell(
-                onTap: ()=>{ 
-                  if (Next() == 'success'){
-                    userProvider.refreshUser(),
-                    Navigator.of(context).pop(),
+                onTap: () async {
+                  if (await Next() == 'success') {
+                    userProvider.refreshUser(false);
+                    print("Next was success");
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (BuildContext context) => MyApp(),
+                      ),
+                    );
                   }
                 },
+
                 splashColor: const Color.fromARGB(
                     255, 145, 244, 175), // Custom splash color
                 child: Ink(
@@ -258,7 +181,6 @@ class _SignupScreenState extends State<SignupScreen> {
                       : const Center(child: Text("Next")),
                 ),
               ),
-              ElevatedButton(onPressed: check, child: Text("Check"),),
 
               const SizedBox(height: 12),
               Flexible(flex: 2, child: Container()),

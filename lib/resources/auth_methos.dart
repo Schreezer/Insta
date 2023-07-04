@@ -22,130 +22,18 @@ class AuthMethods {
       } else {
         DocumentSnapshot snap =
             await _firestore.collection('users').doc(currentUser.uid).get();
-        print("the snap is: ${snap.data()}");
+        // print("the snap is: ${snap.data()}");
         return model.User.fromSnap(snap);
       }
     } catch (e) {
-      print("shit is null");
-      print(e);
+      // print("shit is null");
+      // print(e);
       throw e;
     }
   }
 
-  // send otp button:
-  // this button sets the varaibles of the class, which were not declared previously, so that they can be used later in the code
-  // it also calls the AuthenticateUser function, which sends the otp to the user, and that function can automatically check if the otp has arrived or not
-  // if the otp has arrived, then Authenticate user function will pass the string 'success' and this function automatically calls the signupUser function, which signs up the user
-  // if the otp has not arrived, then Authenticate user function will pass the error message, and this function will return that error message
-  // then
-  // Future<String> sendOtp(
-  //   String phoneNumber,
-  //   String mail,
-  //   String userName,
-  //   String bio,
-  //   Uint8List? file,
-  // ) async {
-  //   Bio = bio;
-  //   UserName = userName;
-  //   Mail = mail;
-  //   Imager = file;
-  //   PhoneNumber = phoneNumber;
-  //   String res = "Some Err Occured";
-  //   try {
-  //     if (phoneNumber.isNotEmpty &&
-  //         mail.isNotEmpty &&
-  //         userName.isNotEmpty &&
-  //         bio.isNotEmpty) {
-  //       res = await AuthenticateUser(phone: phoneNumber);
-  //       print("running sendotp in auth methods");
-  //       print(res);
-  //       if (res == "success") {
-  //         // res = await signupUser(
-  //         //     phoneNumber: PhoneNumber,
-  //         //     mail: Mail,
-  //         //     bio: Bio,
-  //         //     userName: UserName,
-  //         //     file: file,
-  //         //     cred: Cred);
-  //       }
-  //     }
-  //   } catch (error) {
-  //     res = error.toString();
-  //   }
-  //   print(res);
-  //   return res;
-  // }
 
-  Future<String> Register(
-    String Otp,
-  ) async {
-    // var val = await _submitOTP(Otp, VerificationId);
-    // print("the value of val in Register function is: $val");
-    // // ignore: unrelated_type_equality_checks
-    // print("the mail is $Mail");
-    // print("the bio is $Bio");
-    // print("the username is $UserName");
-    // print("the phone number is $PhoneNumber");
-    // print("the cred is $Cred");
 
-    // if (val == "success") {
-    //   signupUser(
-    //       mail: Mail,
-    //       bio: Bio,
-    //       userName: UserName,
-    //       phoneNumber: PhoneNumber,
-    //       file: Imager,
-    //       cred: Cred);
-    //   return "success";
-    // } else {
-    //   return val;
-    return ' batman is alive';
-  }
-
-  // Future<String> AuthenticateUser({required String phone}) async {
-  //   String res = "Starting phone authentication...";
-  //   final completer = Completer<String>();
-
-  //   try {
-  //     if (phone.isNotEmpty) {
-  //       await _auth.verifyPhoneNumber(
-  //         phoneNumber: phone,
-  //         verificationCompleted: (PhoneAuthCredential credential) async {
-  //           Cred = await _auth.signInWithCredential(credential);
-  //           print(Cred.user!.uid);
-  //           res = "success";
-  //           print("Verification completed");
-  //         },
-  //         verificationFailed: (FirebaseAuthException e) {
-  //           print("verification failed");
-  //           if (e.code == "invalid-phone-number") {
-  //             res = "The provided phone number is not valid";
-  //             print("The provided phone number is not valid");
-  //           } else {
-  //             res = e.toString();
-  //             print(e.toString());
-  //           }
-  //         },
-  //         codeSent: (String verificationId, int? resendToken) {
-  //           // Save the verification ID to use later
-  //           print("code sent");
-  //           res = 'code sent';
-  //           VerificationId = verificationId;
-  //           completer.complete(res);
-  //         },
-  //         codeAutoRetrievalTimeout: (String verificationId) {
-  //           print("code auto retrieval timeout");
-  //           // res = 'manual verification required';
-  //         },
-  //       );
-  //     }
-  //   } catch (error) {
-  //     res = error.toString();
-  //     completer.complete(res);
-  //   }
-  //   print(res);
-  //   return completer.future;
-  // }
 
   Future<String> _submitOTP(
     String otp,
@@ -157,7 +45,7 @@ class AuthMethods {
         smsCode: otp,
       );
       final value = await _signInWithCredential(credential);
-      print("the value of value in _submitOtp funciton is: $value");
+      // print("the value of value in _submitOtp funciton is: $value");
       if (value == "success") {
         return "success";
       } else {
@@ -187,10 +75,10 @@ class AuthMethods {
     Uint8List? file,
     required String uid,
   }) async {
-    print("the uid is $uid");
-    print("the phone number is $phoneNumber");
+    // print("the uid is $uid");
+    // print("the phone number is $phoneNumber");
     String res = "Some Error Occured";
-    print("signning up the user");
+    // print("signning up the user");
     try {
       if (mail.isNotEmpty &&
           bio.isNotEmpty &&
@@ -211,8 +99,8 @@ class AuthMethods {
           photoUrl = await StorageMethods()
               .uploadImageToStorage("profileImage", file, false);
         }
-        print("the photo url is:");
-        print(photoUrl);
+        // print("the photo url is:");
+        // print(photoUrl);
         model.User user = model.User(
           email: mail,
           uid: uid,
@@ -221,7 +109,7 @@ class AuthMethods {
           photoUrl: photoUrl,
           followers: [],
           following: [],
-          token: 100,
+          tokens: 100,
         );
         await _firestore.collection("users").doc(uid).set(user.toJson());
         res = "success";
@@ -255,28 +143,28 @@ class AuthMethods {
           phoneNumber: phone,
           verificationCompleted: (PhoneAuthCredential credential) async {
             Cred = await _auth.signInWithCredential(credential);
-            print(Cred.user!.uid);
+            // print(Cred.user!.uid);
             res = "success";
-            print("Verification completed");
+            // print("Verification completed");
           },
           verificationFailed: (FirebaseAuthException e) {
-            print("verification failed");
+            // print("verification failed");
             if (e.code == "invalid-phone-number") {
               res = "The provided phone number is not valid";
-              print("The provided phone number is not valid");
+              // print("The provided phone number is not valid");
             } else {
               res = e.toString();
-              print(e.toString());
+              // print(e.toString());
             }
           },
           codeSent: (String verificationId, int? resendToken) {
             // Save the verification ID to use later
-            print("code sent");
+            // print("code sent");
             res = 'code sent';
             VerificationId = verificationId;
           },
           codeAutoRetrievalTimeout: (String verificationId) {
-            print("code auto retrieval timeout");
+            // print("code auto retrieval timeout");
             // res = 'manual verification required';
           },
         );
@@ -297,7 +185,7 @@ class AuthMethods {
         smsCode: otp,
       );
       final value = await _signInWithCredential(credential);
-      print("the value of value in _submitOtp funciton is: $value");
+      // print("the value of value in _submitOtp funciton is: $value");
       if (value == "success") {
         return "success";
       } else {

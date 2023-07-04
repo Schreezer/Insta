@@ -91,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           CircleAvatar(
                             backgroundColor: Colors.grey,
                             backgroundImage: NetworkImage(
-                              userData['profileImage'],
+                              userData['photoUrl'],
                             ),
                             radius: 40,
                           ),
@@ -153,7 +153,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                                 },
                                               )
                                             : FollowButton(
-                                                text: 'Follow',
+                                                text: 'Follow wil',
                                                 backgroundColor: Colors.blue,
                                                 textColor: Colors.white,
                                                 borderColor: Colors.blue,
