@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/resources/storage_methods.dart';
+import 'package:instagram/resources/storage_methods.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:provider/provider.dart';
 
@@ -20,6 +21,8 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   List<Uint8List> upload_images = [];
+  // Uint8List? _file;
+
   // Uint8List? _file;
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _bountyController = TextEditingController();
@@ -43,6 +46,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 Uint8List file = await pickImage(ImageSource.camera);
                 setState(() {
                   upload_images.add(file);
+                  upload_images.add(file);
                 });
               },
             ),
@@ -53,6 +57,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 Navigator.of(context).pop();
                 Uint8List file = await pickImage(ImageSource.gallery);
                 setState(() {
+                  upload_images.add(file);
+                  // _file = file;
                   upload_images.add(file);
                   // _file = file;
                 });
@@ -75,6 +81,9 @@ class _AddPostScreenState extends State<AddPostScreen> {
       // _file = null;
       _bountyController.clear();
       upload_images.clear();
+      // _file = null;
+      _bountyController.clear();
+      upload_images.clear();
       _descriptionController.clear();
     });
   }
@@ -92,6 +101,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
     _descriptionController.dispose();
     _bountyController.dispose();
     upload_images.clear();
+    _bountyController.dispose();
+    upload_images.clear();
   }
 
   void postImage(
@@ -106,7 +117,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       _isLoading = true;
     });
     try {
-      if(bounty==0){
+      if (bounty == 0) {
         showSnackBar("Please put some tokens as bounty", context);
         throw Exception("Please put some tokens as bounty");
       }
@@ -121,7 +132,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
           int.parse(_bountyController.text),
           username,
           profImage);
+
       if (res == 'success') {
+        res = await StorageMethods()
+            .updateTokens(tokens - int.parse(_bountyController.text));
         res = await StorageMethods()
             .updateTokens(tokens - int.parse(_bountyController.text));
         showSnackBar("Posted", context);
@@ -135,11 +149,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
     setState(() {
       _isLoading = false;
     });
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     var bounty = 10;
+
     final User? user = Provider.of<UserProvider>(context).getUser;
     var pic = (user?.photoUrl == '' || user?.photoUrl == null)
         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
@@ -172,7 +190,8 @@ class _AddPostScreenState extends State<AddPostScreen> {
                   )),
             ]), //Actions
         body: SingleChildScrollView(
-          child: Stack(children: [
+            child: Stack(
+          children: [
             Column(children: [
               const SizedBox(height: 8),
               Row(children: [
@@ -279,7 +298,10 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     )
             ]),
             _isLoading ? const LinearProgressIndicator() : Container(),
-          ]),
-        ));
+            const Divider(
+              color: Colors.grey,
+            ),
+          ],
+        )));
   }
 }

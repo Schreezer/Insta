@@ -92,12 +92,14 @@ class _LandingScreenState extends State<LandingScreen> {
                                   },
                                   child: const Text(
                                     'Enter',
+                                    'Enter',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
                                     ),
                                   ),
                                 ),
+
 
                               ],
                             ),
@@ -122,6 +124,7 @@ class _LandingScreenState extends State<LandingScreen> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
+
 
                             ],
                           ),
