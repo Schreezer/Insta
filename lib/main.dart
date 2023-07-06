@@ -16,9 +16,18 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   if (kIsWeb) {
-    await dotenv.load(fileName: ".env");
-    
-    final value = await Firebase.initializeApp(
+
+    // await dotenv.load(fileName: "file.env");
+    // await Firebase.initializeApp(
+    //     options: FirebaseOptions(
+    //   apiKey: dotenv.env['apiKey'] ?? '',
+    //   appId: dotenv.env['appId'] ?? '',
+    //   messagingSenderId: dotenv.env['measurementId'] ?? '',
+    //   projectId: dotenv.env['projectId'] ?? '',
+    //   storageBucket: dotenv.env['storageBucket'] ?? '',
+    // ));
+
+    await Firebase.initializeApp(
         options: FirebaseOptions(
       apiKey: 'AIzaSyBnpB5N6qkLDPKSp_FlpuSj3lkTXnUvWfE',
       appId: '1:152819163863:web:b9083c5b7ab98b1aa50692',
@@ -26,15 +35,7 @@ void main() async {
       projectId: 'instagram-a7218',
       storageBucket: 'instagram-a7218.appspot.com',
     ));
-    print(value);
-    // await Firebase.initializeApp(
-    //     options: FirebaseOptions(
-    //   apiKey: 'AIzaSyBnpB5N6qkLDPKSp_FlpuSj3lkTXnUvWfE',
-    //   appId: '1:152819163863:web:b9083c5b7ab98b1aa50692',
-    //   messagingSenderId: '152819163863',
-    //   projectId: 'instagram-a7218',
-    //   storageBucket: 'instagram-a7218.appspot.com',
-    // ));
+
   } else {
     await Firebase.initializeApp();
   }
@@ -54,7 +55,7 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
           debugShowCheckedModeBanner: false,
-          title: 'Instagram',
+          title: 'Bountier',
           theme: ThemeData.dark().copyWith(
             scaffoldBackgroundColor: mobileBackgroundColor,
           ),
@@ -64,8 +65,6 @@ class MyApp extends StatelessWidget {
               final userProvider =
                   Provider.of<UserProvider>(context, listen: true);
 
-              userProvider.refreshUser(true);
-              // print("hello");
               userProvider.refreshUser(true);
               // print("hello");
               if (snapshot.connectionState == ConnectionState.active) {

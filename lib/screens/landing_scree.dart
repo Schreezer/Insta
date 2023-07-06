@@ -1,7 +1,13 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:animated_text_kit/animated_text_kit.dart';
+import 'package:instagram/responsive/responsive_layout_screen.dart';
+import 'package:instagram/screens/about_screen.dart';
 import 'package:instagram/screens/login_screen.dart';
 import 'package:instagram/screens/signup_screen.dart';
+
+import '../responsive/moblie_screen_layout.dart';
+import '../responsive/web_screen_layout.dart';
 
 class LandingScreen extends StatefulWidget {
   const LandingScreen({Key? key}) : super(key: key);
@@ -14,11 +20,12 @@ class _LandingScreenState extends State<LandingScreen> {
   final _formKey = GlobalKey<FormState>();
   late PageController _pageController;
   int _currentPage = 0;
+  Timer? _timer;
 
   final List<String> texts = [
-    'Welcome to BOUNTIER',
+    'Stuck at Something? \n Put a Bounty on it!',
     'So What is Bountier? \n\n',
-    'A place where you can trade knowledge',
+    'A place where you can trade knowledge, seek help, help others, all in exchange for the native currency BNT',
   ];
   final List<Color> colors = [
     Colors.blue.shade200,
@@ -38,11 +45,25 @@ class _LandingScreenState extends State<LandingScreen> {
         });
       }
     });
+
+    _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      if (_currentPage < 2) {
+        _currentPage++;
+        _pageController.animateToPage(
+          _currentPage,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInOut,
+        );
+      } else {
+        _timer?.cancel();
+      }
+    });
   }
 
   @override
   void dispose() {
     _pageController.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -50,7 +71,9 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return PageView.builder(
+    return Stack(
+    children: [ 
+      PageView.builder(
       controller: _pageController,
       itemCount: texts.length,
       scrollDirection: width > 600 ? Axis.vertical : Axis.horizontal,
@@ -59,9 +82,62 @@ class _LandingScreenState extends State<LandingScreen> {
           decoration: BoxDecoration(
             color: colors[index % 3],
           ),
-          child: Stack(
-            children: [
-              Column(
+          child: 
+              
+              SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _currentPage == index
+                            ? Center(
+                                child: AnimatedTextKit(
+                                  animatedTexts: [
+                                    TypewriterAnimatedText(
+                                      texts[index],
+                                      textAlign: TextAlign.center,
+                                      textStyle: const TextStyle(
+                                        fontSize: 32.0,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
+                                  totalRepeatCount: 1,
+                                  repeatForever: false,
+                                  pause: const Duration(milliseconds: 1000),
+                                  displayFullTextOnTap: true,
+                                  stopPauseOnTap: true,
+                                  onTap: () {
+                                    print('Text pressed');
+                                  },
+                                  onFinished: () {
+                                    print('Animation finished');
+                                  },
+                                  isRepeatingAnimation: false,
+                                ),
+                              )
+                            : Text(
+                                texts[index],
+                                style: const TextStyle(
+                                  fontSize: 20.0,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            
+        );
+      },
+    ),
+    Column(
                 children: [
                   Expanded(
                     flex: (height * 0.5).toInt(),
@@ -86,13 +162,39 @@ class _LandingScreenState extends State<LandingScreen> {
                                       context,
                                       MaterialPageRoute(
                                         builder: (BuildContext context) =>
+                                            ResponsiveLayout(
+                                              mobileScreenLayout:
+                                                  MobileScreenLayout(),
+                                              webScreenLayout:
+                                                  WebScreenLayout(),
+                                            ),
+                                      ),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Take a Peek',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: width * 0.1),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    fixedSize: const Size(250, 50),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (BuildContext context) =>
                                             const LoginScreen(),
                                       ),
                                     );
                                   },
                                   child: const Text(
-                                    'Enter',
-                                    'Enter',
+                                    'Sign Up or Login',
                                     style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 20,
@@ -100,12 +202,34 @@ class _LandingScreenState extends State<LandingScreen> {
                                   ),
                                 ),
 
-
                               ],
                             ),
                           )
                         : Column(
                             children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) =>
+                                            ResponsiveLayout(
+                                              mobileScreenLayout:
+                                                  MobileScreenLayout(),
+                                              webScreenLayout:
+                                                  WebScreenLayout(),
+                                            )),
+                                  );
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  fixedSize: const Size(150, 30),
+                                ),
+                                child: const Text(
+                                  'Take a Peek',
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                              const SizedBox(height: 18),
                               ElevatedButton(
                                 onPressed: () {
                                   Navigator.push(
@@ -124,63 +248,22 @@ class _LandingScreenState extends State<LandingScreen> {
                                   style: TextStyle(color: Colors.white),
                                 ),
                               ),
-
-
                             ],
                           ),
                   ),
                 ],
               ),
-              SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _currentPage == index
-                            ? AnimatedTextKit(
-                                animatedTexts: [
-                                  TypewriterAnimatedText(
-                                    texts[index],
-                                    textStyle: const TextStyle(
-                                      fontSize: 32.0,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                                totalRepeatCount: 1,
-                                repeatForever: false,
-                                pause: const Duration(milliseconds: 1000),
-                                displayFullTextOnTap: true,
-                                stopPauseOnTap: true,
-                                onTap: () {
-                                  print('Text pressed');
-                                },
-                                onFinished: () {
-                                  print('Animation finished');
-                                },
-                                isRepeatingAnimation: false,
-                              )
-                            : Text(
-                                texts[index],
-                                style: const TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
-                              ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ],
+              Positioned(
+      bottom: 30,
+      right: 30,
+      child: GestureDetector(
+        onTap: ()=> Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) => aboutScreen(),
           ),
-        );
-      },
-    );
+        ),
+        child: Icon(Icons.info, color: const Color.fromARGB(255, 219, 28, 28), )),
+    ),]);
   }
 }

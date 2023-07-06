@@ -3,11 +3,12 @@ import "package:flutter/material.dart";
 import "package:instagram/screens/add_post_screen.dart";
 import "package:instagram/screens/favourites.dart";
 import "package:instagram/screens/feed_screen.dart";
+import "package:instagram/screens/guest_profile.dart";
 import "package:instagram/screens/profile_screen.dart";
 import "package:instagram/screens/search_screen.dart";
 
 const webScreenSize = 600;
-User? currentUser = FirebaseAuth.instance.currentUser;
+User? currentUser = FirebaseAuth.instance.currentUser   ;
 var VerificationId = '';
 var Bio = "";
 var UserName = "";
@@ -31,6 +32,6 @@ var homeScreenItems = [
   // const Placeholder(),
   const AddPostScreen(),
   // const favouriteScreen(),
-  ProfileScreen(uid: currentUser!.uid),
+  currentUser!=null ? ProfileScreen(uid: currentUser!.uid) : guestProfile(),
 
 ];

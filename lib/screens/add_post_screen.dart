@@ -6,10 +6,8 @@ import 'package:instagram/resources/storage_methods.dart';
 import 'package:instagram/resources/storage_methods.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:provider/provider.dart';
-
 import '../models/user.dart';
 import '../providers/user_provider.dart';
-
 import '../utils/utils.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -21,15 +19,10 @@ class AddPostScreen extends StatefulWidget {
 
 class _AddPostScreenState extends State<AddPostScreen> {
   List<Uint8List> upload_images = [];
-  // Uint8List? _file;
-
-  // Uint8List? _file;
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _bountyController = TextEditingController();
-
   bool _isLoading = false;
   // Rest of the code...
-
   _selectImage(BuildContext context) async {
     return showDialog(
       context: context,
@@ -203,14 +196,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
                     color: Color.fromARGB(255, 222, 220, 220),
                   ),
                 ),
-                const SizedBox(width: 26),
+                // const SizedBox(width: 26),
                 SizedBox(
                   height: 45,
-                  width: MediaQuery.of(context).size.width * 0.48,
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  
                   child: TextField(
                     controller: _bountyController,
                     decoration: InputDecoration(
-                      hintText: "Enter Bounty Here",
+                      hintText: "Enter Bounty Here (<= ${user?.tokens})",
                       hintStyle: TextStyle(
                           color: Color.fromARGB(255, 153, 148, 148),
                           backgroundColor: Color.fromARGB(255, 52, 52, 52)),
@@ -240,21 +234,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       maxLines: 8,
                     ),
                   ),
-                  // SizedBox(
-                  //     height: 45,
-                  //     width: 45,
-                  //     child: AspectRatio(
-                  //         aspectRatio: 487 / 451,
-                  //         child: Container(
-                  //           decoration: BoxDecoration(
-                  //             image: DecorationImage(
-                  //               image:
-                  //                   NetworkImage("https://loremflickr.com/320/240"),
-                  //               fit: BoxFit.fill,
-                  //               alignment: FractionalOffset.topCenter,
-                  //             ),
-                  //           ),
-                  //         ))),
+                  
                   IconButton(
                     icon: const Icon(Icons.add_a_photo),
                     onPressed: () => _selectImage(context),

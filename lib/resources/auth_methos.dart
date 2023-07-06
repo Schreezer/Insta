@@ -32,9 +32,6 @@ class AuthMethods {
     }
   }
 
-
-
-
   Future<String> _submitOTP(
     String otp,
     String _verificationid,
@@ -135,44 +132,45 @@ class AuthMethods {
     required String phone,
   }) async {
     String res = "Some Error Occured";
+    var completer = Completer<String>(); // Declare a Completer
+
     try {
       if (phone.isNotEmpty) {
-        // check if the pohne number is previously authenticated
-
         await _auth.verifyPhoneNumber(
           phoneNumber: phone,
           verificationCompleted: (PhoneAuthCredential credential) async {
             Cred = await _auth.signInWithCredential(credential);
-            // print(Cred.user!.uid);
             res = "success";
-            // print("Verification completed");
+            completer.complete(
+                res); // Complete the completer when verification is complete
           },
           verificationFailed: (FirebaseAuthException e) {
-            // print("verification failed");
             if (e.code == "invalid-phone-number") {
               res = "The provided phone number is not valid";
-              // print("The provided phone number is not valid");
             } else {
               res = e.toString();
-              // print(e.toString());
             }
+            completer.complete(
+                res); // Complete the completer when verification fails
           },
           codeSent: (String verificationId, int? resendToken) {
-            // Save the verification ID to use later
-            // print("code sent");
             res = 'code sent';
             VerificationId = verificationId;
+            completer.complete(
+                res);
+            // Don't complete the completer here because verification is not yet complete
           },
           codeAutoRetrievalTimeout: (String verificationId) {
-            // print("code auto retrieval timeout");
-            // res = 'manual verification required';
+            // Handle auto-retrieval timeout if necessary
           },
         );
       }
     } catch (_err) {
       res = _err.toString();
+      completer.complete(res); // Complete the completer when there's an error
     }
-    return res;
+
+    return completer.future; // Return the completer's future
   }
 
   Future<String> Login_otp_submit(

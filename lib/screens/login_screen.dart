@@ -1,9 +1,11 @@
 import "package:cloud_firestore/cloud_firestore.dart";
+import "package:country_picker/country_picker.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:instagram/Widgets/standard_button.dart";
 import "package:instagram/screens/signup_screen.dart";
 import "package:instagram/utils/utils.dart";
+import "package:intl_phone_field/intl_phone_field.dart";
 import "package:provider/provider.dart";
 import "../Widgets/text_field_input.dart";
 import "../main.dart";
@@ -36,6 +38,8 @@ class _LoginScreenState extends State<LoginScreen> {
     });
     String res =
         await AuthMethods().Login_otp(phone: _phoneNumberController.text);
+
+    print(res);
     if (res == 'success') {
       showSnackBar(res, context);
     } else {
@@ -52,7 +56,9 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _isLoading2 = true;
     });
-    res = await AuthMethods().Login_otp_submit(_otpController.text);
+    await AuthMethods()
+        .Login_otp_submit(_otpController.text)
+        .then((value) => res = value);
 
     if (res == 'success') {
       if (!context.mounted) return;
@@ -106,7 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     final userProvider = Provider.of<UserProvider>(context, listen: false);
-
+    final inputBorder = OutlineInputBorder(
+      borderRadius: BorderRadius.circular(10),
+      borderSide: Divider.createBorderSide(context),
+    );
     return Scaffold(
         resizeToAvoidBottomInset: false,
         body: SafeArea(
@@ -133,12 +142,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   const SizedBox(height: 64),
-                  TextFieldInput(
-                    hintText: "Enter your Phone Number with country code",
-                    textInputType: TextInputType.emailAddress,
-                    textEditingController: _phoneNumberController,
+
+                  IntlPhoneField(
+                    decoration: InputDecoration(
+                      hintText: 'Phone Number',
+                      filled: true,
+                      border: inputBorder,
+                      focusedBorder: inputBorder,
+                      enabledBorder: inputBorder,
+                      contentPadding: const EdgeInsets.all(8),
+                    ),
+                    // controller: _phoneNumberController,
+                    initialCountryCode: 'IN',
+                    onChanged: (phone) {
+                      setState(() {
+                         _phoneNumberController.text = phone.completeNumber;
+                      });
+                     
+                    },
                   ),
-                  const SizedBox(height: 24),
+                  // TextFieldInput(
+                  //   hintText: "Enter your Phone Number with country code",
+                  //   textInputType: TextInputType.emailAddress,
+                  //   textEditingController: _phoneNumberController,
+                  // ),
+                  const SizedBox(height: 2),
                   StandardButton(
                     function: sendOtp,
                     isLoading: _isLoading1,

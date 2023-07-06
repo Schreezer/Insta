@@ -13,7 +13,6 @@ import 'package:instagram/utils/utils.dart';
 import 'package:intl/date_time_patterns.dart';
 // import 'package:instagram/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
-
 import '../Widgets/comment_card.dart';
 import '../models/post.dart';
 
@@ -28,7 +27,6 @@ class CommentsScreen extends StatefulWidget {
 class _CommentsScreenState extends State<CommentsScreen> {
   final TextEditingController commentEditingController =
       TextEditingController();
-  List<Uint8List> pics = [];
   List<Uint8List> upload_images = [];
 
   _selectImage(BuildContext context) async {
@@ -133,7 +131,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final User? user = Provider.of<UserProvider>(context).getUser;
+    // final User? user = Provider.of<UserProvider>(context).getUser ?? null as User?;
+    User? user = null as User?;
+
     
     return Scaffold(
       appBar: AppBar(
@@ -175,14 +175,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
               child: Text('No comments yet'),
             );
           }
-
-          // if(user!.uid == )
-          // bool factuals = fact(user!.uid) as bool;
           
           if (upload_images.isEmpty) {
             return 
-            // Text(" this is workingn atleast, user id is : ${user!.uid} and the length of snapshot data is : ${snapshot.data!.docs.length}");
-            // print("helo");
+            
             ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (ctx, index) => CommentCard(
@@ -228,7 +224,10 @@ class _CommentsScreenState extends State<CommentsScreen> {
         },
       ),
       // text input
-      bottomNavigationBar: SafeArea(
+      
+      bottomNavigationBar: 
+      user==null ? 
+      SafeArea(
         child: Container(
           height: kToolbarHeight,
           margin:
@@ -236,17 +235,17 @@ class _CommentsScreenState extends State<CommentsScreen> {
           padding: const EdgeInsets.only(left: 16, right: 8),
           child: Row(
             children: [
-              CircleAvatar(
-                backgroundImage: NetworkImage(user!.photoUrl),
-                radius: 18,
-              ),
+              // CircleAvatar(
+              //   backgroundImage: NetworkImage(user!.photoUrl),
+              //   radius: 18,
+              // ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
                   child: TextField(
                     controller: commentEditingController,
                     decoration: InputDecoration(
-                      hintText: 'Comment as ${user.userName}',
+                      // hintText: 'Comment as ${user.userName}',
                       border: InputBorder.none,
                     ),
                   ),
@@ -263,11 +262,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 width: 8,
               ),
               InkWell(
-                onTap: () => postComment(
-                  user.uid,
-                  user.userName,
-                  user.photoUrl,
-                ),
+                onTap: () {},
+                // => postComment(
+                //   user.uid,
+                //   user.userName,
+                //   user.photoUrl,
+                // ),
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -280,7 +280,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
             ],
           ),
         ),
-      ),
+      ) 
+      : Text("Please Login to comment"),
+
     );
   }
 }

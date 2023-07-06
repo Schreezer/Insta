@@ -243,19 +243,26 @@ class _PostCardState extends State<PostCard> {
                 isExpanded == false &&
                         widget.snap['description'].toString().length > 200
                     ? GestureDetector(
-                      onTap: ()=>  setState(() {
-                        isExpanded = !isExpanded;
-                      }),
-                      child: Text(
-                          widget.snap['description']
-                                  .toString()
-                                  .substring(0, 200) +
-                              "Show More...",
-                          style: const TextStyle(
-                            color: Colors.white,
+                        onTap: () => setState(() {
+                              isExpanded = !isExpanded;
+                            }),
+                        child: RichText(
+                          text: TextSpan(
+                            text: widget.snap['description']
+                                .toString()
+                                .substring(0, 200),
+                            style: DefaultTextStyle.of(context).style,
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: 'Show More...',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                    )
+                        ))
                     : Text(widget.snap['description'].toString()),
                 const SizedBox(
                   height: 4,
@@ -268,7 +275,9 @@ class _PostCardState extends State<PostCard> {
           // IMAGE SECTION OF THE POST
 
           // display the image thumbnails in a horizontal list view, and on click, display the image in a dialog box
-          Text("Attachments: ", style: TextStyle(fontWeight: FontWeight.bold)),
+
+          widget.snap['photoUrl'].length!=0 ? Text("Attachments: ", style: TextStyle(fontWeight: FontWeight.bold)): Container(),
+          isExpanded && widget.snap['photoUrl'].length!=0 ? 
           Container(
             height: MediaQuery.of(context).size.height * 0.15,
             width: double.infinity,
@@ -301,7 +310,11 @@ class _PostCardState extends State<PostCard> {
                 return SizedBox(width: 10); // change this to the desired width
               },
             ),
-          ),
+          ) : GestureDetector(
+            onTap: () => setState(() {
+              isExpanded = !isExpanded;
+            }),
+            child: widget.snap['photoUrl'].length!=0 ? Text( widget.snap['photoUrl'].length.toString() + " images", style: TextStyle(color: Colors.blue),): Container()),
 
           // LIKE, COMMENT SECTION OF THE POST
           Row(
@@ -342,12 +355,14 @@ class _PostCardState extends State<PostCard> {
               //       Icons.send,
               //     ),
               //     onPressed: () {}),
-              Expanded(
-                  child: Align(
-                alignment: Alignment.bottomRight,
-                child: IconButton(
-                    icon: const Icon(Icons.bookmark_border), onPressed: () {}),
-              ))
+              // Expanded(
+              //     child: Align(
+              //   alignment: Alignment.bottomRight,
+              //   child: IconButton(
+              //       icon: const Icon(Icons.bookmark_border),
+              //       onPressed: () => showSnackBar(
+              //           "What do you wnat this button to do?", context)),
+              // ))
             ],
           ),
           //DESCRIPTION AND NUMBER OF COMMENTS
@@ -356,7 +371,7 @@ class _PostCardState extends State<PostCard> {
             alignment: Alignment.centerLeft,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 16),
-              child: Column(
+              child: Row(
                 // mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -370,28 +385,7 @@ class _PostCardState extends State<PostCard> {
                         '${widget.snap['likes'].length} likes',
                         style: Theme.of(context).textTheme.bodyMedium,
                       )),
-                  // Container(
-                  //   width: double.infinity,
-                  //   padding: const EdgeInsets.only(
-                  //     top: 8,
-                  //   ),
-                  //   child: RichText(
-                  //     text: TextSpan(
-                  //       style: const TextStyle(color: primaryColor),
-                  //       children: [
-                  //         TextSpan(
-                  //           text: widget.snap['userName'].toString(),
-                  //           style: const TextStyle(
-                  //             fontWeight: FontWeight.bold,
-                  //           ),
-                  //         ),
-                  //         // TextSpan(
-                  //         //   text: ' ${widget.snap['description']}',
-                  //         // ),
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+                  Expanded(child: Container(),),
                   InkWell(
                     child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                       stream: FirebaseFirestore.instance
