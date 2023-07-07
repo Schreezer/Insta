@@ -104,10 +104,8 @@ class _CommentCardState extends State<CommentCard> {
                       onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => 
-                          ProfileScreen(
+                          builder: (context) => ProfileScreen(
                             uid: widget.snap.data()['uid'],
-                          
                           ),
                           // Placeholder(),
                         ),
@@ -152,34 +150,35 @@ class _CommentCardState extends State<CommentCard> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: Padding(
-              padding: EdgeInsets.only(left: 50),
-              child: RichText(
-  text: TextSpan(
-    style: const TextStyle(
-      fontSize: 16,
-      fontWeight: FontWeight.w400,
-      color: Color.fromARGB(255, 253, 251, 251),
-    ),
-    children: <TextSpan>[
-      TextSpan(
-        text: _isExpanded == false && widget.snap.data()['text'].length > 200
-            ? widget.snap.data()['text'].substring(0, 200) + '...'
-            : widget.snap.data()['text'],
-      ),
-      _isExpanded == false && widget.snap.data()['text'].length > 200
-          ? TextSpan(
-              text: ' Show More',
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-              ),
-            )
-          : TextSpan(),
-    ],
-  ),
-)
-
-            ),
+                padding: EdgeInsets.only(left: 50),
+                child: RichText(
+                  text: TextSpan(
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      color: Color.fromARGB(255, 253, 251, 251),
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(
+                        text: _isExpanded == false &&
+                                widget.snap.data()['text'].length > 200
+                            ? widget.snap.data()['text'].substring(0, 200) +
+                                '...'
+                            : widget.snap.data()['text'],
+                      ),
+                      _isExpanded == false &&
+                              widget.snap.data()['text'].length > 200
+                          ? TextSpan(
+                              text: ' Show More',
+                              style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )
+                          : TextSpan(),
+                    ],
+                  ),
+                )),
           ),
         ),
         SizedBox(height: 8),
@@ -280,22 +279,19 @@ class _CommentCardState extends State<CommentCard> {
                       }
 
                       // Your future is loaded
-                      return 
-                      user!=null ? ElevatedButton(
-                          onPressed: () => Release(
-                              snappy.data!.uid == user!.uid,
-                              snappy.data!.bounty,
-                              widget.snap.data()['uid'],
-                              snappy.data!.postId),
-                          child:
-                              // Text("Ask for Bounty, ${snappy.data!.bounty}"),
-                              Container(
-                                  child: snappy.data!.uid == user!.uid
-                                      ? Text("Release Bounty")
-                                      : Icon(Icons.arrow_upward_rounded),
-                                      )
-                                      ) : 
-                                      Container();
+                      return user != null
+                          ? (snappy.data!.uid == user!.uid
+                              ? ElevatedButton(
+                                  onPressed: () => Release(
+                                      snappy.data!.uid == user!.uid,
+                                      snappy.data!.bounty,
+                                      widget.snap.data()['uid'],
+                                      snappy.data!.postId),
+                                  child:
+                                      // Text("Ask for Bounty, ${snappy.data!.bounty}"),
+                                      Container(child: Text("Release Bounty")))
+                              : Row(children: [Icon(Icons.arrow_upward_rounded), Icon(Icons.arrow_downward_rounded)]))
+                          : Container();
                     },
                   ),
                 ]),

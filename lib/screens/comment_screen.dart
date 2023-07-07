@@ -173,7 +173,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
             );
           }
           
-          else if (snapshot.data!.docs.length == 0) {
+          else if (snapshot.data!.docs.length == 0 && upload_images.isEmpty) {
             return const Center(
               child: Text('No comments yet'),
             );

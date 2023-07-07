@@ -12,6 +12,7 @@ import "package:provider/provider.dart";
 import "../Widgets/text_field_input.dart";
 import "../providers/user_provider.dart";
 import "../utils/utils.dart";
+import 'dart:html' as html;
 // import "assets/images/instagram_logo.svg";
 
 class SignupScreen extends StatefulWidget {
@@ -68,6 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = false;
     });
+    html.window.location.reload();
     return result;
   }
 

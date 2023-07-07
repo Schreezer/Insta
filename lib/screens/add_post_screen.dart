@@ -39,7 +39,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 Uint8List file = await pickImage(ImageSource.camera);
                 setState(() {
                   upload_images.add(file);
-                  upload_images.add(file);
+                 
                 });
               },
             ),
@@ -52,7 +52,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 setState(() {
                   upload_images.add(file);
                   // _file = file;
-                  upload_images.add(file);
+               
                   // _file = file;
                 });
               },
@@ -74,9 +74,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
       // _file = null;
       _bountyController.clear();
       upload_images.clear();
-      // _file = null;
-      _bountyController.clear();
-      upload_images.clear();
+
       _descriptionController.clear();
     });
   }

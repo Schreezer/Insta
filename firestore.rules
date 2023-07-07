@@ -4,7 +4,7 @@ service cloud.firestore {
     match /users/{userId} {
       allow read;
       allow update: if request.auth.uid == userId 
-                     && request.resource.data.tokens == resource.data.tokens
+                     // && request.resource.data.tokens == resource.data.tokens
                      && request.resource.data.uid == resource.data.uid;
       allow create: if request.auth.uid == userId;
     }

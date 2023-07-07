@@ -17,14 +17,14 @@ void main() async {
 
   if (kIsWeb) {
 
-    await dotenv.load(fileName: "file_env");
+    // await dotenv.load(fileName: "file_env");
     await Firebase.initializeApp(
       options: FirebaseOptions(
-      apiKey: dotenv.env['apiKey'] ?? '',
-      appId: dotenv.env['appId'] ?? '',
-      messagingSenderId: dotenv.env['measurementId'] ?? '',
-      projectId: dotenv.env['projectId'] ?? '',
-      storageBucket: dotenv.env['storageBucket'] ?? '',
+      apiKey: 'AIzaSyBnpB5N6qkLDPKSp_FlpuSj3lkTXnUvWfE',
+      appId: '1:152819163863:web:b9083c5b7ab98b1aa50692',
+      messagingSenderId: '152819163863',
+      projectId: 'instagram-a7218',
+      storageBucket:  'instagram-a7218.appspot.com',
     ));
 
 

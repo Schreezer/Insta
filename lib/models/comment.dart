@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:instagram/models/like.dart';
+import 'package:instagram/models/vote.dart';
 
 class Comment {
   String uid; // of the person commenting
@@ -7,7 +7,8 @@ class Comment {
   String userName;//
   String profilePic;//
   String commentId; //
-  List<Like> likes; 
+  List<Vote> upvotes;
+  List<Vote> downvotes; 
   List<String> pics; //
   final datePublished;//
   // the urls of the pics the comments will have
@@ -19,7 +20,8 @@ class Comment {
     required this.profilePic,
     required this.commentId,
     required this.datePublished,
-    this.likes = const [],
+    this.upvotes = const [],
+    this.downvotes = const [],
     this.pics = const [],
   });
 
@@ -30,7 +32,8 @@ class Comment {
         'profilePic': profilePic,
         'commentId': commentId,
         'datePublished': datePublished,
-        'likes': likes,
+        'upvotes': upvotes,
+        'downvotes': downvotes,
         'pics': pics,
       };
   static Comment fromSnap(DocumentSnapshot snap) {
@@ -42,6 +45,9 @@ class Comment {
       profilePic: snapshot['profilePic'] ?? '',
       datePublished: snapshot['datePublished'] ?? [],
       commentId: snapshot['commentId'] ?? '',
+      upvotes: snapshot['upvotes'] ?? [],
+      downvotes: snapshot['downvotes'] ?? [],
+      pics: snapshot['pics'] ?? [],
     );
   }
 }

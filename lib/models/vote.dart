@@ -1,8 +1,8 @@
- class Like{
+ class Vote{
   final String uid;
   final String name;
 
-  Like({
+  Vote({
     required this.uid,
     required this.name,
   });
