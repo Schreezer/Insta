@@ -9,7 +9,7 @@ import 'package:instagram/utils/utils.dart';
 import 'package:instagram/widgets/follow_button.dart';
 
 class ProfileScreen extends StatefulWidget {
-  final String uid;
+  final String? uid;
 
   const ProfileScreen({Key? key, required this.uid}) : super(key: key);
 
@@ -28,8 +28,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    print('the uid of the logged-in user is:');
-    print(widget.uid);
     super.initState();
     getData();
   }

@@ -94,8 +94,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
     _descriptionController.dispose();
     _bountyController.dispose();
     upload_images.clear();
-    _bountyController.dispose();
-    upload_images.clear();
   }
 
   void postImage(

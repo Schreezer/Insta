@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:instagram/screens/add_post_screen.dart';
+import 'package:instagram/screens/feed_screen.dart';
+import 'package:instagram/screens/profile_screen.dart';
+import 'package:provider/provider.dart';
 
 
+import '../providers/user_provider.dart';
+import '../screens/guest_profile.dart';
 import '../utils/colors.dart';
 import '../utils/global_variables.dart';
 
@@ -44,6 +50,7 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
 
   @override
   Widget build(BuildContext context) {
+    final userProvider = Provider.of<UserProvider>(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: mobileBackgroundColor,
@@ -91,7 +98,9 @@ class _WebScreenLayoutState extends State<WebScreenLayout> {
         physics: const NeverScrollableScrollPhysics(),
         controller: pageController,
         onPageChanged: onPageChanged,
-        children: homeScreenItems,
+        children: [
+          FeedScreen(), AddPostScreen(), userProvider.getUser!=null ? ProfileScreen(uid: userProvider.getUser!.uid) : guestProfile()
+        ],
       ),
     );
   }

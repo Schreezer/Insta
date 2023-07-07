@@ -44,6 +44,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 Navigator.of(context).pop();
                 Uint8List file = await pickImage(ImageSource.camera);
                 setState(() {
+                  
                   upload_images.add(file);
                 });
               },
@@ -55,6 +56,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 Navigator.of(context).pop();
                 Uint8List file = await pickImage(ImageSource.gallery);
                 setState(() {
+                  print("image added from gallery");
                   upload_images.add(file);
                   // _file = file;
                 });
@@ -73,6 +75,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
   }
 
   void clearImage() {
+    print("clearing image");
     setState(() {
       // _file = null;
       upload_images.clear();
@@ -131,8 +134,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final User? user = Provider.of<UserProvider>(context).getUser ?? null as User?;
-    User? user = null as User?;
+    final User? user = Provider.of<UserProvider>(context).getUser ?? null as User?;
+    // User? user = null as User?;
 
     
     return Scaffold(
@@ -178,7 +181,6 @@ class _CommentsScreenState extends State<CommentsScreen> {
           
           if (upload_images.isEmpty) {
             return 
-            
             ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (ctx, index) => CommentCard(
@@ -226,26 +228,27 @@ class _CommentsScreenState extends State<CommentsScreen> {
       // text input
       
       bottomNavigationBar: 
-      user==null ? 
+      
       SafeArea(
-        child: Container(
+        child:
+        user!=null ? Container(
           height: kToolbarHeight,
           margin:
               EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           padding: const EdgeInsets.only(left: 16, right: 8),
           child: Row(
             children: [
-              // CircleAvatar(
-              //   backgroundImage: NetworkImage(user!.photoUrl),
-              //   radius: 18,
-              // ),
+              CircleAvatar(
+                backgroundImage: NetworkImage(user!.photoUrl),
+                radius: 18,
+              ),
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 16, right: 8),
                   child: TextField(
                     controller: commentEditingController,
                     decoration: InputDecoration(
-                      // hintText: 'Comment as ${user.userName}',
+                      hintText: 'Comment as ${user.userName}',
                       border: InputBorder.none,
                     ),
                   ),
@@ -262,12 +265,12 @@ class _CommentsScreenState extends State<CommentsScreen> {
                 width: 8,
               ),
               InkWell(
-                onTap: () {},
-                // => postComment(
-                //   user.uid,
-                //   user.userName,
-                //   user.photoUrl,
-                // ),
+                onTap: ()
+                => postComment(
+                  user.uid,
+                  user.userName,
+                  user.photoUrl,
+                ),
                 child: Container(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
@@ -279,9 +282,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
               )
             ],
           ),
-        ),
+        ): Text("Please Login to comment"),
       ) 
-      : Text("Please Login to comment"),
+      
 
     );
   }

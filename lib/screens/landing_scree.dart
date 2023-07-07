@@ -17,7 +17,6 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-  final _formKey = GlobalKey<FormState>();
   late PageController _pageController;
   int _currentPage = 0;
   Timer? _timer;
@@ -254,16 +253,24 @@ class _LandingScreenState extends State<LandingScreen> {
                 ],
               ),
               Positioned(
-      bottom: 30,
+      top: 30,
       right: 30,
-      child: GestureDetector(
-        onTap: ()=> Navigator.push(
+     
+        child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            // fixedSize: const Size(50, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(50),
+            ),
+          ),
+          onPressed: () => Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (BuildContext context) => aboutScreen(),
+            builder: (BuildContext context) => const aboutScreen(),
           ),
         ),
-        child: Icon(Icons.info, color: const Color.fromARGB(255, 219, 28, 28), )),
-    ),]);
+          child: const Text("About", style: TextStyle(color: Colors.white))),
+        ),
+    ]);
   }
 }

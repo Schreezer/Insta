@@ -13,13 +13,13 @@ class UserProvider with ChangeNotifier {
       if (internal) {
         if (_user == null) {
           _user = user;
-          // print("new user");
+          print("new user");
 
           notifyListeners();
         }
       } else {
         _user = user;
-        // print("new user");
+        print("user logged in");
 
         notifyListeners();
       }

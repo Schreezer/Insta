@@ -2,6 +2,13 @@ import "package:flutter/cupertino.dart";
 import "package:flutter/material.dart";
 import "package:instagram/utils/colors.dart";
 import "package:instagram/utils/global_variables.dart";
+import "package:provider/provider.dart";
+
+import "../providers/user_provider.dart";
+import "../screens/add_post_screen.dart";
+import "../screens/feed_screen.dart";
+import "../screens/guest_profile.dart";
+import "../screens/profile_screen.dart";
 
 class MobileScreenLayout extends StatefulWidget {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -39,12 +46,15 @@ class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   @override
   Widget build(BuildContext context) {
     // print(user!.userName);
+    final userProvider = Provider.of<UserProvider>(context);
+
     return Scaffold(
         body: PageView(
           controller: pageController,
           onPageChanged: onPageChanged,
           physics: const NeverScrollableScrollPhysics(),
-          children: homeScreenItems,
+          children: [
+          FeedScreen(), AddPostScreen(), userProvider.getUser!=null ? ProfileScreen(uid: userProvider.getUser!.uid) : guestProfile(),]
         ),
         bottomNavigationBar: CupertinoTabBar(
           backgroundColor: mobileBackgroundColor,

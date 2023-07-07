@@ -8,7 +8,23 @@ import "package:instagram/screens/profile_screen.dart";
 import "package:instagram/screens/search_screen.dart";
 
 const webScreenSize = 600;
-User? currentUser = FirebaseAuth.instance.currentUser   ;
+// User? currentUser = FirebaseAuth.instance.currentUser;
+FirebaseAuth _auth = FirebaseAuth.instance;
+User? currentUser;
+void initState() {
+  
+  _auth.userChanges().listen((User? user) {
+    if (user == null) {
+      print('User is currently signed out!');
+    } else {
+      setState(){
+        currentUser = user; 
+      }
+      // update currentUser
+      print('User is signed in! Current user updated');
+    }
+  });
+}
 var VerificationId = '';
 var Bio = "";
 var UserName = "";
@@ -19,6 +35,7 @@ var G_uid = "";
 bool signedUp = false;
 // ignore: non_constant_identifier_names, cast_from_null_always_fails
 UserCredential Cred = null as UserCredential;
+
 
 var homeScreenItems = [
   // Text("Home"),

@@ -12,6 +12,9 @@ import "../main.dart";
 import "../providers/user_provider.dart";
 import "../resources/auth_methos.dart";
 import "../utils/global_variables.dart";
+import 'dart:html' as html;
+
+
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -90,6 +93,8 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(
               builder: (BuildContext context) => MyApp(),
             ));
+        html.window.location.reload();
+        
       }
     } else {
       if (!context.mounted) return;
