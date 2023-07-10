@@ -12,8 +12,9 @@ import "../main.dart";
 import "../providers/user_provider.dart";
 import "../resources/auth_methos.dart";
 import "../utils/global_variables.dart";
-import 'dart:html' as html;
-
+import 'package:otp_autofill/otp_autofill.dart';
+// import 'dart:html' as html;
+import 'package:restart_app/restart_app.dart';
 
 
 class LoginScreen extends StatefulWidget {
@@ -70,15 +71,15 @@ class _LoginScreenState extends State<LoginScreen> {
       FirebaseAuth auth = FirebaseAuth.instance;
       FirebaseFirestore firestore = FirebaseFirestore.instance;
       String? uid = auth.currentUser?.uid.toString();
-      G_uid = uid!;
-      PhoneNumber = _phoneNumberController.text;
+      // G_uid = uid!;
+      // PhoneNumber = _phoneNumberController.text;
       final snapshot =
           await FirebaseFirestore.instance.collection('users').doc(uid).get();
 
       if (snapshot == null || !snapshot.exists) {
         if (!context.mounted) return;
         Provider.refreshUser(false);
-        PhoneNumber = _phoneNumberController.text;
+        // PhoneNumber = _phoneNumberController.text;
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -93,7 +94,8 @@ class _LoginScreenState extends State<LoginScreen> {
             MaterialPageRoute(
               builder: (BuildContext context) => MyApp(),
             ));
-        html.window.location.reload();
+        // html.window.location.reload();
+        Restart.restartApp();
         
       }
     } else {
@@ -157,6 +159,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       enabledBorder: inputBorder,
                       contentPadding: const EdgeInsets.all(8),
                     ),
+                    keyboardType: TextInputType.phone,
+                    
                     // controller: _phoneNumberController,
                     initialCountryCode: 'IN',
                     onChanged: (phone) {
@@ -184,11 +188,13 @@ class _LoginScreenState extends State<LoginScreen> {
                     isPass: true,
                     textEditingController: _otpController,
                   ),
+
                   const SizedBox(height: 24),
                   StandardButton(
                     function: () => Next(userProvider),
                     isLoading: _isLoading2,
                     displayText: "Next",
+
                   ),
                   const SizedBox(height: 12),
                   Flexible(flex: 2, child: Container()),

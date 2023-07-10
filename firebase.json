@@ -1,7 +1,7 @@
 {
   "hosting": {
-    "site": "0xbountier",
     "public": "build/web",
+    "site": "0xbountier",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -17,5 +17,8 @@
   "firestore": {
     "rules": "firestore.rules",
     "indexes": "firestore.indexes.json"
+  },
+  "storage": {
+    "rules": "storage.rules"
   }
 }

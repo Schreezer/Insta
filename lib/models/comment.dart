@@ -7,8 +7,8 @@ class Comment {
   String userName;//
   String profilePic;//
   String commentId; //
-  List<Vote> upvotes;
-  List<Vote> downvotes; 
+  List<Vote> upVotes;
+  List<Vote> downVotes; 
   List<String> pics; //
   final datePublished;//
   // the urls of the pics the comments will have
@@ -20,8 +20,8 @@ class Comment {
     required this.profilePic,
     required this.commentId,
     required this.datePublished,
-    this.upvotes = const [],
-    this.downvotes = const [],
+    this.upVotes = const [],
+    this.downVotes = const [],
     this.pics = const [],
   });
 
@@ -32,8 +32,8 @@ class Comment {
         'profilePic': profilePic,
         'commentId': commentId,
         'datePublished': datePublished,
-        'upvotes': upvotes,
-        'downvotes': downvotes,
+        'upVotes': upVotes,
+        'downVotes': downVotes,
         'pics': pics,
       };
   static Comment fromSnap(DocumentSnapshot snap) {
@@ -45,8 +45,8 @@ class Comment {
       profilePic: snapshot['profilePic'] ?? '',
       datePublished: snapshot['datePublished'] ?? [],
       commentId: snapshot['commentId'] ?? '',
-      upvotes: snapshot['upvotes'] ?? [],
-      downvotes: snapshot['downvotes'] ?? [],
+      upVotes: snapshot['upVotes'] ?? [],
+      downVotes: snapshot['downVotes'] ?? [],
       pics: snapshot['pics'] ?? [],
     );
   }

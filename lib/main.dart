@@ -11,6 +11,8 @@ import 'package:instagram/screens/signup_screen.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:provider/provider.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,7 +37,19 @@ void main() async {
 
   runApp(const MyApp());
 }
+// Future<void> main() async {
+//  WidgetsFlutterBinding.ensureInitialized();
+//  await Firebase.initializeApp(
+//    options: DefaultFirebaseOptions.currentPlatform,
+//  );
 
+//  // TODO: Request permission
+//  // TODO: Register with FCM
+//  // TODO: Set up foreground message handler
+//  // TODO: Set up background message handler
+
+//  runApp(MyApp());
+// }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
   @override

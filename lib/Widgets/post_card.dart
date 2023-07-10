@@ -1,3 +1,5 @@
+//Original 
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram/Widgets/image_grid.dart';
@@ -75,14 +77,17 @@ class _PostCardState extends State<PostCard> {
     return Container(
       // boundary needed for web
       decoration: BoxDecoration(
-        border: Border.all(
-          color: width > webScreenSize ? secondaryColor : mobileBackgroundColor,
-        ),
-        color: mobileBackgroundColor,
+        borderRadius: BorderRadius.circular(12),
+        color: width > webScreenSize ? secondaryColor : mobileBackgroundColor,
+        boxShadow: [
+          BoxShadow(
+            color: const Color.fromARGB(255, 233, 230, 230).withOpacity(0.1),
+            blurRadius: 12,
+            offset: Offset(0, 2),
+          ),
+        ],
       ),
-      padding: const EdgeInsets.symmetric(
-        vertical: 10,
-      ),
+      padding: const EdgeInsets.all(16),
       child: Column(
         children: [
           // Bounty Section
@@ -94,6 +99,7 @@ class _PostCardState extends State<PostCard> {
             ).copyWith(right: 0),
             decoration: BoxDecoration(
               color: Colors.blue,
+              borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -163,45 +169,7 @@ class _PostCardState extends State<PostCard> {
                           showSnackBar(
                               "What the fuck do you want here?", context);
                         }
-                        // showDialog(
-                        //   useRootNavigator: false,
-                        //   context: context,
-                        //   builder: (context) {
-                        // return
-                        // Dialog(
-                        //   child: ListView(
-                        //       padding: const EdgeInsets.symmetric(
-                        //           vertical: 16),
-                        //       shrinkWrap: true,
-                        //       children: [
-                        //         'Delete',
-                        //       ]
-                        //           .map(
-                        //             (e) => InkWell(
-                        //                 child: Container(
-                        //                   padding:
-                        //                       const EdgeInsets.symmetric(
-                        //                           vertical: 12,
-                        //                           horizontal: 16),
-                        //                   child: Text(e),
-                        //                 ),
-                        //                 onTap: () {
-                        //                   // deletePost(
-                        //                   //   widget.snap['postId']
-                        //                   //       .toString(),
-                        //                   // );
-                        //                   // // remove the dialog box
-                        //                   // Navigator.of(context).pop();
-                        //                   showSnackBar("This is not ready yet", context);
-                        //                 }),
-                        //           )
-                        //           .toList()),
-                        // );
-                        //       },
-                        //     );
-                        //   },
-                        //   icon: const Icon(Icons.more_vert),
-                        // )
+                        
                         )
                     : Container(),
               ],
@@ -270,11 +238,7 @@ class _PostCardState extends State<PostCard> {
               ],
             ),
           ),
-          // ImageGrid(images: images),
-
-          // IMAGE SECTION OF THE POST
-
-          // display the image thumbnails in a horizontal list view, and on click, display the image in a dialog box
+ 
 
           widget.snap['photoUrl'].length!=0 ? Text("Attachments: ", style: TextStyle(fontWeight: FontWeight.bold)): Container(),
           isExpanded && widget.snap['photoUrl'].length!=0 ? 
@@ -350,19 +314,7 @@ class _PostCardState extends State<PostCard> {
                   ),
                 )),
               ),
-              // IconButton(
-              //     icon: const Icon(
-              //       Icons.send,
-              //     ),
-              //     onPressed: () {}),
-              // Expanded(
-              //     child: Align(
-              //   alignment: Alignment.bottomRight,
-              //   child: IconButton(
-              //       icon: const Icon(Icons.bookmark_border),
-              //       onPressed: () => showSnackBar(
-              //           "What do you wnat this button to do?", context)),
-              // ))
+    
             ],
           ),
           //DESCRIPTION AND NUMBER OF COMMENTS
@@ -423,17 +375,7 @@ class _PostCardState extends State<PostCard> {
                       ),
                     ),
                   ),
-                  // Container(
-                  //   padding: const EdgeInsets.symmetric(vertical: 4),
-                  //   child: Text(
-                  //     DateFormat.yMMMd()
-                  //         .format(widget.snap['datePublished'].toDate()),
-                  //     // "hell",
-                  //     style: const TextStyle(
-                  //       color: secondaryColor,
-                  //     ),
-                  //   ),
-                  // ),
+              
                 ],
               ),
             ),

@@ -70,207 +70,199 @@ class _LandingScreenState extends State<LandingScreen> {
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
-    return Stack(
-    children: [ 
+    return Stack(children: [
       PageView.builder(
-      controller: _pageController,
-      itemCount: texts.length,
-      scrollDirection: width > 600 ? Axis.vertical : Axis.horizontal,
-      itemBuilder: (context, index) {
-        return DecoratedBox(
-          decoration: BoxDecoration(
-            color: colors[index % 3],
-          ),
-          child: 
-              
-              SizedBox(
-                height: MediaQuery.of(context).size.height,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _currentPage == index
-                            ? Center(
-                                child: AnimatedTextKit(
-                                  animatedTexts: [
-                                    TypewriterAnimatedText(
-                                      texts[index],
-                                      textAlign: TextAlign.center,
-                                      textStyle: const TextStyle(
-                                        fontSize: 32.0,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.white,
-                                      ),
+        controller: _pageController,
+        itemCount: texts.length,
+        scrollDirection: width > 600 ? Axis.vertical : Axis.horizontal,
+        itemBuilder: (context, index) {
+          return DecoratedBox(
+            decoration: BoxDecoration(
+              color: colors[index % 3],
+            ),
+            child: SizedBox(
+              height: MediaQuery.of(context).size.height,
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _currentPage == index
+                          ? Center(
+                              child: AnimatedTextKit(
+                                animatedTexts: [
+                                  TypewriterAnimatedText(
+                                    texts[index],
+                                    textAlign: TextAlign.center,
+                                    textStyle: const TextStyle(
+                                      fontSize: 32.0,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                      decoration: TextDecoration.none, // Remove underline
                                     ),
-                                  ],
-                                  totalRepeatCount: 1,
-                                  repeatForever: false,
-                                  pause: const Duration(milliseconds: 1000),
-                                  displayFullTextOnTap: true,
-                                  stopPauseOnTap: true,
-                                  onTap: () {
-                                    print('Text pressed');
-                                  },
-                                  onFinished: () {
-                                    print('Animation finished');
-                                  },
-                                  isRepeatingAnimation: false,
-                                ),
-                              )
-                            : Text(
-                                texts[index],
-                                style: const TextStyle(
-                                  fontSize: 20.0,
-                                  color: Colors.white,
-                                ),
-                                textAlign: TextAlign.center,
+                                  ),
+                                ],
+                                totalRepeatCount: 1,
+                                repeatForever: false,
+                                pause: const Duration(milliseconds: 1000),
+                                displayFullTextOnTap: true,
+                                stopPauseOnTap: true,
+                                onTap: () {
+                                  print('Text pressed');
+                                },
+                                onFinished: () {
+                                  print('Animation finished');
+                                },
+                                isRepeatingAnimation: false,
                               ),
-                      ],
-                    ),
+                            )
+                          : Text(
+                              texts[index],
+                              style: const TextStyle(
+                                fontSize: 20.0,
+                                color: Colors.white,
+                                decoration: TextDecoration.none, // Remove underline
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                    ],
                   ),
                 ),
               ),
-            
-        );
-      },
-    ),
-    Column(
-                children: [
-                  Expanded(
-                    flex: (height * 0.5).toInt(),
-                    child: Container(),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: width * 0.2,
-                      vertical: height * 0.1,
-                    ),
-                    child: width > 600
-                        ? Center(
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(250, 50),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            ResponsiveLayout(
-                                              mobileScreenLayout:
-                                                  MobileScreenLayout(),
-                                              webScreenLayout:
-                                                  WebScreenLayout(),
-                                            ),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Take a Peek',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: width * 0.1),
-                                ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    fixedSize: const Size(250, 50),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            const LoginScreen(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    'Sign Up or Login',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                    ),
-                                  ),
-                                ),
-
-                              ],
-                            ),
-                          )
-                        : Column(
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (BuildContext context) =>
-                                            ResponsiveLayout(
-                                              mobileScreenLayout:
-                                                  MobileScreenLayout(),
-                                              webScreenLayout:
-                                                  WebScreenLayout(),
-                                            )),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: const Size(150, 30),
-                                ),
-                                child: const Text(
-                                  'Take a Peek',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                              const SizedBox(height: 18),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (BuildContext context) =>
-                                          const LoginScreen(),
-                                    ),
-                                  );
-                                },
-                                style: ElevatedButton.styleFrom(
-                                  fixedSize: const Size(150, 30),
-                                ),
-                                child: const Text(
-                                  'Login / Sign Up',
-                                  style: TextStyle(color: Colors.white),
-                                ),
-                              ),
-                            ],
+            ),
+          );
+        },
+      ),
+      Column(
+        children: [
+          Expanded(
+            flex: (height * 0.5).toInt(),
+            child: Container(),
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: width * 0.2,
+              vertical: height * 0.1,
+            ),
+            child: width > 600
+                ? Center(
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(250, 50),
                           ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    ResponsiveLayout(
+                                  mobileScreenLayout: MobileScreenLayout(),
+                                  webScreenLayout: WebScreenLayout(),
+                                ),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Take a Peek',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                        SizedBox(width: width * 0.1),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            fixedSize: const Size(250, 50),
+                          ),
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    const LoginScreen(),
+                              ),
+                            );
+                          },
+                          child: const Text(
+                            'Sign Up or Login',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 20,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                : Column(
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    ResponsiveLayout(
+                                      mobileScreenLayout: MobileScreenLayout(),
+                                      webScreenLayout: WebScreenLayout(),
+                                    )),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(150, 30),
+                        ),
+                        child: const Text(
+                          'Take a Peek',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  const LoginScreen(),
+                            ),
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          fixedSize: const Size(150, 30),
+                        ),
+                        child: const Text(
+                          'Login / Sign Up',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              Positioned(
-      top: 30,
-      right: 30,
-     
+          ),
+        ],
+      ),
+      Positioned(
+        top: 30,
+        right: 30,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
-            // fixedSize: const Size(50, 50),
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
             ),
           ),
           onPressed: () => Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (BuildContext context) => const aboutScreen(),
+            context,
+            MaterialPageRoute(
+              builder: (BuildContext context) => const aboutScreen(),
+            ),
           ),
+          child: const Text("About", style: TextStyle(color: Colors.white)),
         ),
-          child: const Text("About", style: TextStyle(color: Colors.white))),
-        ),
+      ),
     ]);
   }
 }

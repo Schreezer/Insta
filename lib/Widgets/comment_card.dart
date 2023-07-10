@@ -13,10 +13,10 @@ import '../providers/user_provider.dart';
 import '../screens/profile_screen.dart';
 
 class CommentCard extends StatefulWidget {
-  final snap;
+  final commentSnap;
   Future<Post> post;
 
-  CommentCard({Key? key, required this.snap, required this.post})
+  CommentCard({Key? key, required this.commentSnap, required this.post})
       : super(key: key);
 
   @override
@@ -24,6 +24,7 @@ class CommentCard extends StatefulWidget {
 }
 
 class _CommentCardState extends State<CommentCard> {
+  FirestoreMethods _firestoreMethods = FirestoreMethods();
   bool _isExpanded = false;
   @override
   Widget build(BuildContext context) {
@@ -89,7 +90,7 @@ class _CommentCardState extends State<CommentCard> {
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(
-                widget.snap.data()['profilePic'],
+                widget.commentSnap.data()['profilePic'],
               ),
               radius: 18,
             ),
@@ -105,12 +106,12 @@ class _CommentCardState extends State<CommentCard> {
                         context,
                         MaterialPageRoute(
                           builder: (context) => ProfileScreen(
-                            uid: widget.snap.data()['uid'],
+                            uid: widget.commentSnap.data()['uid'],
                           ),
                           // Placeholder(),
                         ),
                       ),
-                      child: Text(widget.snap.data()['userName'],
+                      child: Text(widget.commentSnap.data()['userName'],
                           style: const TextStyle(
                             fontWeight: FontWeight.bold,
                           )),
@@ -120,7 +121,7 @@ class _CommentCardState extends State<CommentCard> {
                       padding: const EdgeInsets.only(top: 4),
                       child: Text(
                         DateFormat.yMMMd().format(
-                          widget.snap.data()['datePublished'].toDate(),
+                          widget.commentSnap.data()['datePublished'].toDate(),
                         ),
                         style: const TextStyle(
                           fontSize: 12,
@@ -161,13 +162,15 @@ class _CommentCardState extends State<CommentCard> {
                     children: <TextSpan>[
                       TextSpan(
                         text: _isExpanded == false &&
-                                widget.snap.data()['text'].length > 200
-                            ? widget.snap.data()['text'].substring(0, 200) +
+                                widget.commentSnap.data()['text'].length > 200
+                            ? widget.commentSnap
+                                    .data()['text']
+                                    .substring(0, 200) +
                                 '...'
-                            : widget.snap.data()['text'],
+                            : widget.commentSnap.data()['text'],
                       ),
                       _isExpanded == false &&
-                              widget.snap.data()['text'].length > 200
+                              widget.commentSnap.data()['text'].length > 200
                           ? TextSpan(
                               text: ' Show More',
                               style: TextStyle(
@@ -182,20 +185,128 @@ class _CommentCardState extends State<CommentCard> {
           ),
         ),
         SizedBox(height: 8),
+        Row(
+          children: [
+            GestureDetector(
+              child: Text(
+                "Attachments: ${widget.commentSnap.data()['pics'].length}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue,
+                ),
+              ),
+              onTap: () {
+                setState(() {
+                  _isExpanded = !_isExpanded;
+                });
+                print("i ran");
+              },
+            ),
+            Expanded(child: Container()),
+            FutureBuilder<Post>(
+              future: widget.post,
+              builder: (BuildContext context, AsyncSnapshot<Post> postSnap) {
+                // Check if your future has an error
+                // print(postSnap.hasData);
+
+                if (postSnap.hasError) {
+                  print(postSnap.error);
+                  return Text('Error: ${postSnap.error}');
+                }
+
+                // Check if your future is still loading
+                if (postSnap.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator();
+                }
+
+                // Your future is loaded
+                return user != null
+                    ? (user.uid == widget.commentSnap.data()['uid']
+                        ? ElevatedButton(
+                            onPressed: () => Release(
+                                postSnap.data!.uid == user.uid,
+                                postSnap.data!.bounty,
+                                widget.commentSnap.data()['uid'],
+                                postSnap.data!.postId),
+                            child:
+                                // Text("Ask for Bounty, ${postSnap.data!.bounty}"),
+                                Container(child: Text("Raise Issue")))
+                        : postSnap.data!.uid == user.uid
+                            ? ElevatedButton(
+                                onPressed: () => Release(
+                                    postSnap.data!.uid == user.uid,
+                                    postSnap.data!.bounty,
+                                    widget.commentSnap.data()['uid'],
+                                    postSnap.data!.postId),
+                                child:
+                                    // Text("Ask for Bounty, ${postSnap.data!.bounty}"),
+                                    Container(child: Text("Release Bounty")))
+                            : Row(children: [
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      '${widget.commentSnap.data()['upVotes'].length ?? 0}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        
+                                      ),
+                                    ),
+                                    IconButton(
+                                      splashColor: Colors.greenAccent,
+                                      splashRadius: 25,
+                                      onPressed: () async {
+                                        await _firestoreMethods.upVote(
+                                          widget.commentSnap
+                                              .data()['commentId'],
+                                          user.uid,
+                                          postSnap.data!.postId,
+                                        );
+                                      },
+                                      icon: Icon(Icons.arrow_upward_rounded),
+                                    ),
+                                  ],
+                                ),
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      '${widget.commentSnap.data()['downVotes'].length ?? 0}',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        // fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    IconButton(
+                                      splashColor: Colors.redAccent,
+                                      splashRadius: 25,
+                                      onPressed: () async {
+                                        await _firestoreMethods.downVote(
+                                          widget.commentSnap
+                                              .data()['commentId'],
+                                          user.uid,
+                                          postSnap.data!.postId,
+                                        );
+                                      },
+                                      icon: Icon(Icons.arrow_downward_rounded),
+                                    ),
+                                  ],
+                                )
+                              ]))
+                    : Container();
+              },
+            ),
+          ],
+        ),
         _isExpanded
             ?
             // the images in listview builder with side scrolling:
-
-            // covering full screen as height:
-
-            widget.snap.data()['pics'].length == 0
+            widget.commentSnap.data()['pics'].length == 0
                 ? Container()
                 : Align(
                     alignment: Alignment.bottomLeft,
                     child: Container(
                       height: 300,
                       child: ListView.builder(
-                        itemCount: widget.snap.data()['pics'].length,
+                        itemCount: widget.commentSnap.data()['pics'].length,
                         scrollDirection: Axis.horizontal,
                         itemBuilder: (ctx, index) => Align(
                           alignment: Alignment.bottomLeft,
@@ -205,7 +316,7 @@ class _CommentCardState extends State<CommentCard> {
                                 height: 300,
                                 width: 300,
                                 child: Image.network(
-                                    widget.snap.data()['pics'][index]),
+                                    widget.commentSnap.data()['pics'][index]),
                               ),
                               Positioned(
                                 top: 0,
@@ -225,77 +336,7 @@ class _CommentCardState extends State<CommentCard> {
                   )
             :
             // Text("much wow"),
-            GestureDetector(
-                onTap: () => setState(() {
-                  _isExpanded = !_isExpanded;
-                }),
-                child: Row(children: [
-                  Text(
-                    "Attachments: ${widget.snap.data()['pics'].length}",
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  // Tester:
-
-                  // Text("well"),
-
-                  FutureBuilder<Post>(
-                    future: widget.post,
-                    builder:
-                        (BuildContext context, AsyncSnapshot<Post> snapshot) {
-                      if (snapshot.connectionState == ConnectionState.done) {
-                        if (snapshot.hasError) {
-                          // return widget informing of error
-                          return Text('Error: ${snapshot.error}');
-                        } else {
-                          // return your Container widget
-                          return Container();
-                        }
-                      } else {
-                        // still loading, return loading widget
-                        return CircularProgressIndicator();
-                      }
-                    },
-                  ),
-
-                  Expanded(child: Container()),
-                  // snappy is the post kinda lika
-                  FutureBuilder<Post>(
-                    future: widget.post,
-                    builder:
-                        (BuildContext context, AsyncSnapshot<Post> snappy) {
-                      // Check if your future has an error
-                      // print(snappy.hasData);
-
-                      if (snappy.hasError) {
-                        print(snappy.error);
-                        return Text('Error: ${snappy.error}');
-                      }
-
-                      // Check if your future is still loading
-                      if (snappy.connectionState == ConnectionState.waiting) {
-                        return CircularProgressIndicator();
-                      }
-
-                      // Your future is loaded
-                      return user != null
-                          ? (snappy.data!.uid == user!.uid
-                              ? ElevatedButton(
-                                  onPressed: () => Release(
-                                      snappy.data!.uid == user!.uid,
-                                      snappy.data!.bounty,
-                                      widget.snap.data()['uid'],
-                                      snappy.data!.postId),
-                                  child:
-                                      // Text("Ask for Bounty, ${snappy.data!.bounty}"),
-                                      Container(child: Text("Release Bounty")))
-                              : Row(children: [Icon(Icons.arrow_upward_rounded), Icon(Icons.arrow_downward_rounded)]))
-                          : Container();
-                    },
-                  ),
-                ]),
-              )
+            Container(),
       ]),
     );
   }

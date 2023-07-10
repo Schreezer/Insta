@@ -23,6 +23,7 @@ service cloud.firestore {
       match /comments/{commentId} {
       	allow read;
         allow create: if request.auth.uid != null;
+        allow update: if request.auth.uid !=null;
       }
     }
   }

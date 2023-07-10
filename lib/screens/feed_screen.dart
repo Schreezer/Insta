@@ -52,13 +52,17 @@ class FeedScreen extends StatelessWidget {
                   horizontal: width > webScreenSize ? width * 0.3 : 0,
                 ),
                 child:
-                PostCard(
-                  snap: snapshot.data!.docs[index].data(),
+                Padding(
+                  padding: const EdgeInsets.all(2.0),
+                  child: PostCard(
+                    snap: snapshot.data!.docs[index].data(),
+                  ),
                 ),
               ),
               
             );
           },
-        ));
+        )
+        );
   }
 }

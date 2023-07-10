@@ -184,7 +184,7 @@ class _CommentsScreenState extends State<CommentsScreen> {
             ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (ctx, index) => CommentCard(
-                snap: snapshot.data!.docs[index],
+                commentSnap: snapshot.data!.docs[index],
                 post: fact(),
                 // Future.value(Post(bounty: 10 , description: "helo" , uid: "much wow" , userName: "batm" , postId: "1213" ,photoUrl: ["http://picum.com"] , datePublished: "much wow" , likes:[] ,  profImage: "afwa")),
                 
