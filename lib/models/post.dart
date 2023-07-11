@@ -11,7 +11,7 @@ class Post {
   final likes;
   final String profImage;
   final int bounty;
-  List<Comment> comments ;
+  List<dynamic> comments ;
 
   Post({
     required this.bounty,

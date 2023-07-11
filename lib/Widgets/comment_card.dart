@@ -204,6 +204,7 @@ class _CommentCardState extends State<CommentCard> {
                 print("i ran");
               },
             ),
+
             Expanded(child: Container()),
             FutureBuilder<Post>(
               future: widget.post,
@@ -222,6 +223,7 @@ class _CommentCardState extends State<CommentCard> {
                 }
 
                 // Your future is loaded
+                // return Text("data");
                 return user != null
                     ? (user.uid == widget.commentSnap.data()['uid']
                         ? ElevatedButton(
@@ -231,7 +233,7 @@ class _CommentCardState extends State<CommentCard> {
                                 widget.commentSnap.data()['uid'],
                                 postSnap.data!.postId),
                             child:
-                                // Text("Ask for Bounty, ${postSnap.data!.bounty}"),
+                                // Text("Ask for Bounty, ${postSnap.data!.bounty}"),)
                                 Container(child: ( postSnap.data!.uid == user.uid ? Text("Release Bounty"): Text("Raise Issue"))))
                         : postSnap.data!.uid == user.uid
                             ? ElevatedButton(

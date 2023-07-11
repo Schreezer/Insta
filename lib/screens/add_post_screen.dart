@@ -3,10 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/resources/storage_methods.dart';
+import 'package:instagram/responsive/responsive_layout_screen.dart';
+import 'package:instagram/responsive/web_screen_layout.dart';
+import 'package:instagram/screens/feed_screen.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
 import '../providers/user_provider.dart';
+import '../responsive/moblie_screen_layout.dart';
 import '../utils/utils.dart';
 
 class AddPostScreen extends StatefulWidget {
@@ -161,7 +165,13 @@ class _AddPostScreenState extends State<AddPostScreen> {
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(Icons.arrow_back),
-              onPressed: clearImage,
+              onPressed: () {clearImage; 
+              Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => ResponsiveLayout(
+                      mobileScreenLayout: MobileScreenLayout(),
+                      webScreenLayout: WebScreenLayout(),
+                    )));
+              },
             ),
             actions: [
               TextButton(

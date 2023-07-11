@@ -249,11 +249,21 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ],
       ),
+      
+  Positioned(
+    bottom: 10,
+    child: Text(
+      "Test App for Decentralised Quora",
+      style: TextStyle(color: Colors.white, fontSize: 14),
+    ),
+  ),
+
       Positioned(
         top: 30,
         right: 30,
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
+            
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(50),
             ),

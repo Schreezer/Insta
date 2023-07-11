@@ -1,5 +1,5 @@
 import "package:cloud_firestore/cloud_firestore.dart";
-import "package:country_picker/country_picker.dart";
+// import "package:country_picker/country_picker.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:instagram/Widgets/standard_button.dart";
@@ -12,7 +12,7 @@ import "../main.dart";
 import "../providers/user_provider.dart";
 import "../resources/auth_methos.dart";
 import "../utils/global_variables.dart";
-import 'package:otp_autofill/otp_autofill.dart';
+// import 'package:otp_autofill/otp_autofill.dart';
 // import 'dart:html' as html;
 import 'package:restart_app/restart_app.dart';
 

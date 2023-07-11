@@ -8,11 +8,12 @@ import "package:instagram/resources/auth_methos.dart";
 import "package:instagram/screens/login_screen.dart";
 import "package:instagram/utils/colors.dart";
 import "package:provider/provider.dart";
+import "package:restart_app/restart_app.dart";
 // import "package:instagram/utils/colors.dart";
 import "../Widgets/text_field_input.dart";
 import "../providers/user_provider.dart";
 import "../utils/utils.dart";
-import 'dart:html' as html;
+// import 'dart:html' as html;
 // import "assets/images/instagram_logo.svg";
 
 class SignupScreen extends StatefulWidget {
@@ -69,7 +70,8 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = false;
     });
-    html.window.location.reload();
+    // html.window.location.reload();
+    Restart.restartApp();
     return result;
   }
 

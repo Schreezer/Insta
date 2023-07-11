@@ -39,7 +39,7 @@ class aboutScreen extends StatelessWidget {
         child: ListView(
           children: const [
             Text(
-              "This is a beta version of a Decentralied version of Quora, currently called Bountier. In this app, users can ask questions and offer a bounty in the form of BNT tokens to get their questions answered. Users who participate in the beta testing will receive extra tokens on the final release based on their interaction and feedback.",
+              "This is a beta version of a Decentralied version of Quora, currently called Bountier. In this app, users can ask questions and offer a bounty in the form of BNT coins to get their questions answered. Users who participate in the beta testing will receive extra coins on the final release based on their interaction and feedback.",
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             SizedBox(height: 20),
@@ -48,7 +48,7 @@ class aboutScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w600),
             ),
             Text(
-              "1. When a user logs in with their phone number, they receive 100 tokens to spend.",
+              "1. When a user logs in with their phone number, they receive 100 coins to spend.",
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             Text(
@@ -64,7 +64,7 @@ class aboutScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             Text(
-              "5. Users can withdraw and deposit tokens to their wallets. (Available on the final release)",
+              "5. Users can withdraw and deposit coins to their wallets. (Available on the final release)",
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             SizedBox(height: 20),
@@ -77,7 +77,7 @@ class aboutScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             Text(
-              "2. Inflation: Immediate token availability can lead to the devaluation of tokens. Exploring mechanisms to release tokens over time.",
+              "2. Inflation: Immediate token availability can lead to the devaluation of coins. Exploring mechanisms to release coins over time.",
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             Text(
@@ -85,7 +85,7 @@ class aboutScreen extends StatelessWidget {
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             Text(
-              "4. Token availability: Considering a mechanism similar to Brave browser's BAT tokens, where tokens are not always in the user's hands but can be withdrawn on demand.",
+              "4. Token availability: Considering a mechanism similar to Brave browser's BAT coins, where coins are not always in the user's hands but can be withdrawn on demand.",
               style: TextStyle(fontSize: 16.0, height: 1.5),
             ),
             Text(

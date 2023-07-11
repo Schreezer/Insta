@@ -124,8 +124,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
         .doc(widget.postId)
         .get();
   
-    print(
-        "here i am speaking from the ocmment_screen, the value of the post is : ${(post.data() as Map<String, dynamic>)['uid']}");
+    // print(
+        // "here i am speaking from the ocmment_screen, the value of the post is : ${(post.data() as Map<String, dynamic>)['uid']}");
+        // print(post.data() as Map<String, dynamic>);
     // var passer = Post(bounty: 10 , description: "helo" , uid: "much wow" , userName: "batm" , postId: "1213" ,photoUrl: ["http://picum.com"] , datePublished: "much wow" , likes:[] ,  profImage: "afwa");
     final passer = Post.fromSnap(post);
   
@@ -185,8 +186,9 @@ class _CommentsScreenState extends State<CommentsScreen> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (ctx, index) => CommentCard(
                 commentSnap: snapshot.data!.docs[index],
-                post: fact(),
-                // Future.value(Post(bounty: 10 , description: "helo" , uid: "much wow" , userName: "batm" , postId: "1213" ,photoUrl: ["http://picum.com"] , datePublished: "much wow" , likes:[] ,  profImage: "afwa")),
+                post: 
+                fact(),
+                // Future.value(Post(bounty: 10 , description: "helo" , uid: "much wow" , userName: "batm" , postId: "1213" ,photoUrl: ["http://picum.com"] , datePublished: "much wow" , likes:[] ,  profImage: "afwa", comments: [])),
                 
               ),
              
