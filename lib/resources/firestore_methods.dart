@@ -50,8 +50,10 @@ class FirestoreMethods {
         likes: [],
       );
 
-      _fireStore.collection("posts").doc(postId).set(post.toJson());
+      await _fireStore.collection("posts").doc(postId).set(post.toJson());
+      
       res = "success";
+
     } catch (err) {
       res = err.toString();
       print(err);

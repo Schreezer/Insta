@@ -1,4 +1,4 @@
-# instagram
+# Bountier
 
 A new Flutter project.
 

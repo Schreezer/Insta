@@ -1,3 +1,5 @@
+import "dart:math";
+
 import "package:cloud_firestore/cloud_firestore.dart";
 import "package:flutter/material.dart";
 import "package:instagram/Widgets/hell.dart";
@@ -5,6 +7,7 @@ import "package:instagram/Widgets/post_card.dart";
 import "package:instagram/utils/colors.dart";
 
 import "../utils/global_variables.dart";
+import "about_screen.dart";
 
 class FeedScreen extends StatelessWidget {
   const FeedScreen({super.key});
@@ -19,17 +22,31 @@ class FeedScreen extends StatelessWidget {
         appBar: width > webScreenSize
             ? null
             : AppBar(
-                backgroundColor: mobileBackgroundColor,
-                // leading: const Icon(Icons.camera_alt_outlined),
-                title: const Text("Bountier",
-                    style: TextStyle(fontFamily: "jokerman")),
-                // actions: [
-                //   IconButton(
-                //     onPressed: () {},
-                //     icon: const Icon(Icons.chat_bubble_outline_rounded),
-                //   ),
-                // ],
-              ),
+  backgroundColor: mobileBackgroundColor,
+  leading: ElevatedButton(
+    style: ElevatedButton.styleFrom(
+      foregroundColor: Colors.grey[200], backgroundColor: Colors.grey, // text color
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+    ),
+    onPressed: () => Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (BuildContext context) => const aboutScreen(),
+      ),
+    ),
+    child: const Icon(
+      Icons.info_rounded,
+      color: Colors.black,
+    )
+  ),
+  title: const Text("Bountier", style: TextStyle(fontFamily: "jokerman")),
+  // actions: [
+  //   // other actions here
+  // ],
+),
+
         body: StreamBuilder(
           stream: FirebaseFirestore.instance.collection("posts").orderBy("bounty", descending: true).snapshots(),
           builder: (context,

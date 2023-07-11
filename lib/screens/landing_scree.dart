@@ -22,14 +22,17 @@ class _LandingScreenState extends State<LandingScreen> {
   Timer? _timer;
 
   final List<String> texts = [
-    'Stuck at Something? \n Put a Bounty on it!',
+    'Stuck at Something? \n Want to resolve something? \n Put a Bounty on it!',
     'So What is Bountier? \n\n',
     'A place where you can trade knowledge, seek help, help others, all in exchange for the native currency BNT',
+    "Try the Beta version of the App now! and see what it's all about!\n\n Just click the Sign Up button below!"
   ];
   final List<Color> colors = [
     Colors.blue.shade200,
     Colors.red.shade200,
     Colors.green.shade200,
+    Colors.grey,
+    
   ];
 
   @override
@@ -74,11 +77,12 @@ class _LandingScreenState extends State<LandingScreen> {
       PageView.builder(
         controller: _pageController,
         itemCount: texts.length,
-        scrollDirection: width > 600 ? Axis.vertical : Axis.horizontal,
+        scrollDirection: Axis.vertical,
+        // width > 600 ? Axis.vertical : Axis.horizontal,
         itemBuilder: (context, index) {
           return DecoratedBox(
             decoration: BoxDecoration(
-              color: colors[index % 3],
+              color: colors[index % 4],
             ),
             child: SizedBox(
               height: MediaQuery.of(context).size.height,

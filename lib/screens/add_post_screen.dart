@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram/resources/firestore_methods.dart';
 import 'package:instagram/resources/storage_methods.dart';
-import 'package:instagram/resources/storage_methods.dart';
 import 'package:instagram/utils/colors.dart';
 import 'package:provider/provider.dart';
 import '../models/user.dart';
@@ -39,7 +38,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 Uint8List file = await pickImage(ImageSource.camera);
                 setState(() {
                   upload_images.add(file);
-                 
                 });
               },
             ),
@@ -52,7 +50,7 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 setState(() {
                   upload_images.add(file);
                   // _file = file;
-               
+
                   // _file = file;
                 });
               },
@@ -94,13 +92,14 @@ class _AddPostScreenState extends State<AddPostScreen> {
     upload_images.clear();
   }
 
-  void postImage(
+  Future<bool> postImage(
     String uid,
     String username,
     String description,
     String profImage,
     int bounty,
     int tokens,
+    UserProvider userProvider,
   ) async {
     setState(() {
       _isLoading = true;
@@ -125,10 +124,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
       if (res == 'success') {
         res = await StorageMethods()
             .updateTokens(tokens - int.parse(_bountyController.text));
-        res = await StorageMethods()
-            .updateTokens(tokens - int.parse(_bountyController.text));
+
         showSnackBar("Posted", context);
         clearImage();
+        setState(() {
+          _isLoading = false;
+        });
+        print("retrning true");
+        userProvider.refreshUser(false);
+        return true;
       } else {
         showSnackBar(res, context);
       }
@@ -138,16 +142,15 @@ class _AddPostScreenState extends State<AddPostScreen> {
     setState(() {
       _isLoading = false;
     });
-    setState(() {
-      _isLoading = false;
-    });
+    return false;
   }
 
   @override
   Widget build(BuildContext context) {
     var bounty = 10;
+    final userProvider = context.watch<UserProvider>();
+    User? user = userProvider.getUser;
 
-    final User? user = Provider.of<UserProvider>(context).getUser;
     var pic = (user?.photoUrl == '' || user?.photoUrl == null)
         ? "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
         : user?.photoUrl.toString();
@@ -162,13 +165,16 @@ class _AddPostScreenState extends State<AddPostScreen> {
             ),
             actions: [
               TextButton(
-                  onPressed: () => postImage(
-                      user!.uid,
-                      user.userName,
-                      _descriptionController.text,
-                      user.photoUrl,
-                      bounty,
-                      user.tokens),
+                  onPressed: () => 
+                       postImage(
+                                user!.uid,
+                                user.userName,
+                                _descriptionController.text,
+                                user.photoUrl,
+                                bounty,
+                                user.tokens, userProvider)
+                          
+                      ,
                   child: const Text(
                     'Post',
                     style: TextStyle(
@@ -196,7 +202,6 @@ class _AddPostScreenState extends State<AddPostScreen> {
                 SizedBox(
                   height: 45,
                   width: MediaQuery.of(context).size.width * 0.7,
-                  
                   child: TextField(
                     controller: _bountyController,
                     decoration: InputDecoration(
@@ -230,13 +235,11 @@ class _AddPostScreenState extends State<AddPostScreen> {
                       maxLines: 8,
                     ),
                   ),
-                  
                   IconButton(
                     icon: const Icon(Icons.add_a_photo),
                     onPressed: () => _selectImage(context),
                     tooltip: 'add photo',
                   ),
-
                   const Divider(
                     color: Colors.grey,
                   ),
