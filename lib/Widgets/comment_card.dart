@@ -70,8 +70,10 @@ class _CommentCardState extends State<CommentCard> {
           false;
 
       if (shouldContinue) {
+        print("the bounty release function on Comment screen is called");
         if (await StorageMethods().Release_Bounty(toRelease, Bounty, uid) ==
             'success') {
+          showSnackBar("Bounty Released", context);
           await FirebaseFirestore.instance
               .collection('posts')
               .doc(post_id)
@@ -230,7 +232,7 @@ class _CommentCardState extends State<CommentCard> {
                                 postSnap.data!.postId),
                             child:
                                 // Text("Ask for Bounty, ${postSnap.data!.bounty}"),
-                                Container(child: Text("Raise Issue")))
+                                Container(child: ( postSnap.data!.uid == user.uid ? Text("Release Bounty"): Text("Raise Issue"))))
                         : postSnap.data!.uid == user.uid
                             ? ElevatedButton(
                                 onPressed: () => Release(

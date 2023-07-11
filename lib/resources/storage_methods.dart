@@ -51,11 +51,12 @@ class StorageMethods {
   return res;
 }
 
-  Future<String> Release_Bounty(bool _owner, int amount, String receiver)async{
+  Future<String> Release_Bounty(bool owner, int amount, String receiver)async{
     
     String res = "error";
+    print("storage method for releasing bounty has been called");
     try{
-      if(_owner){
+      if(owner){
         // Get the reference to the user's tokens
         DocumentReference ref = FirebaseFirestore.instance.doc("users/${receiver}");
         
@@ -63,6 +64,7 @@ class StorageMethods {
         await ref.update({"tokens": FieldValue.increment(amount)});
         // Set the result to success
         res = "success";
+        // print("success");
       }
       else{
         // Get the reference to the user's tokens
@@ -72,7 +74,7 @@ class StorageMethods {
       // Set the result to the error message
       res = err.toString();
     }
-    // print(res);
+    print(res);
     // Return the result
     return res;
   }

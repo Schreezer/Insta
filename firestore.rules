@@ -3,27 +3,34 @@ service cloud.firestore {
   match /databases/{database}/documents {
     match /users/{userId} {
       allow read;
-      allow update: if request.auth.uid == userId 
-                     // && request.resource.data.tokens == resource.data.tokens
-                     && request.resource.data.uid == resource.data.uid;
+      // allow write;
+      allow update: if request.auth.uid!=null;
+      // : if request.auth.uid == userId  
+      //                && request.resource.data.uid == resource.data.uid;
       allow create: if request.auth.uid == userId;
     }
     match /posts/{postId} {
       allow read;
-      allow create: if request.auth.uid != null;
-      allow update: if request.auth.uid != null
-                     && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes'])
-                     && (request.resource.data.likes == resource.data.likes 
-                         || (request.resource.data.likes.size() == resource.data.likes.size() + 1 )
-                         			  // && request.resource.data.likes.has(request.auth.uid))
-                     //         && request.resource.data.likes.hasAll(resource.data.likes) 
-                     //         && request.resource.data.likes.has(request.auth.uid))
-                         || (request.resource.data.likes.size() == resource.data.likes.size() - 1 ));
-                     //         && resource.data.likes.hasAll(request.resource.data.likes)));
+      allow write: if request.auth.uid!=null;
+      // allow create: if request.auth.uid != null;
+      // allow update: if request.auth.uid != null
+      //                && ( 
+      //                 // ethier likes or bounty is changed
+      //                 request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likes']) 
+      //                || request.resource.data.diff(resource.data).affectedKeys().hasOnly(['bounty'])
+      //                )
+      //                && (request.resource.data.likes == resource.data.likes 
+      //                    || (request.resource.data.likes.size() == resource.data.likes.size() + 1 )
+      //                    			  // && request.resource.data.likes.has(request.auth.uid))
+      //                //         && request.resource.data.likes.hasAll(resource.data.likes) 
+      //                //         && request.resource.data.likes.has(request.auth.uid))
+      //                    || (request.resource.data.likes.size() == resource.data.likes.size() - 1 )) 
+                          
+      //                    ;
+      //                //         && resource.data.likes.hasAll(request.resource.data.likes)));
       match /comments/{commentId} {
       	allow read;
-        allow create: if request.auth.uid != null;
-        allow update: if request.auth.uid !=null;
+				allow write: if request.auth.uid!=null;
       }
     }
   }
