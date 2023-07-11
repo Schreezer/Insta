@@ -36,6 +36,7 @@ class Post {
         'datePublished': datePublished,
         'likes': likes,
         'profImage': profImage,
+        'comments': comments,
       };
 
   static Post fromSnap(DocumentSnapshot snap) {
@@ -50,6 +51,7 @@ class Post {
       datePublished: snapshot['datePublished'] ?? '',
       likes: snapshot['likes'] ?? [],
       profImage: snapshot['profImage'] ?? '',
+      comments: snapshot['comments'] ?? [],
     );
   }
 }

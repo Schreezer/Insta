@@ -338,43 +338,51 @@ class _PostCardState extends State<PostCard> {
                         style: Theme.of(context).textTheme.bodyMedium,
                       )),
                   Expanded(child: Container(),),
-                  InkWell(
-                    child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: FirebaseFirestore.instance
-                          .collection("posts")
-                          .doc(widget.snap["postId"])
-                          .collection("comments")
-                          .snapshots(),
-                      builder: (context,
-                          AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
-                              snapshot) {
-                        // print("snapshot.connectionState");
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-                        if (snapshot.hasError) {
-                          return Text("Something went wrong");
-                        }
-                        if (snapshot.hasData && snapshot.data != null) {
-                          return Text(
-                              "View all ${snapshot.data!.docs.length} comments");
-                        } else {
-                          return CircularProgressIndicator();
-                        }
-                      },
-                    ),
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => CommentsScreen(
-                          postId: widget.snap['postId'].toString(),
-                        ),
-                        // Placeholder(),
+                   InkWell(
+                    child: Text("View all ${widget.snap['comments'].length} comments", style: TextStyle(color: Colors.blue),),
+                    onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => CommentsScreen(
+                        postId: widget.snap['postId'].toString(),
                       ),
-                    ),
-                  ),
+                    )),
+                   )
+                  // InkWell(
+                  //   child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                  //     stream: FirebaseFirestore.instance
+                  //         .collection("posts")
+                  //         .doc(widget.snap["postId"])
+                  //         .collection("comments")
+                  //         .snapshots(),
+                  //     builder: (context,
+                  //         AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>>
+                  //             snapshot) {
+                  //       // print("snapshot.connectionState");
+                  //       if (snapshot.connectionState ==
+                  //           ConnectionState.waiting) {
+                  //         return Center(
+                  //           child: CircularProgressIndicator(),
+                  //         );
+                  //       }
+                  //       if (snapshot.hasError) {
+                  //         return Text("Something went wrong");
+                  //       }
+                  //       if (snapshot.hasData && snapshot.data != null) {
+                  //         return Text(
+                  //             "View all ${snapshot.data!.docs.length} comments");
+                  //       } else {
+                  //         return CircularProgressIndicator();
+                  //       }
+                  //     },
+                  //   ),
+                  //   onTap: () => Navigator.of(context).push(
+                  //     MaterialPageRoute(
+                  //       builder: (context) => CommentsScreen(
+                  //         postId: widget.snap['postId'].toString(),
+                  //       ),
+                  //       // Placeholder(),
+                  //     ),
+                  //   ),
+                  // ),
               
                 ],
               ),

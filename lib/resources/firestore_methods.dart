@@ -104,6 +104,7 @@ class FirestoreMethods {
         pictures.add(photoUrl);
       }
       print("location is firestore methods, the pics are : $pictures");
+
       String commentId = const Uuid().v1();
       DateTime datePublished = DateTime.now();
       Comment comm = Comment(
@@ -117,6 +118,9 @@ class FirestoreMethods {
       );
 
       if (text.isNotEmpty) {
+        _fireStore.collection('posts').doc(postId).update({
+          'comments': FieldValue.arrayUnion([commentId])
+        });
         _fireStore
             .collection('posts')
             .doc(postId)
