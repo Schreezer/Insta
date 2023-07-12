@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.instagram.RunnerTests</string>
+	<string>com.binx.bountier.RunnerTests</string>
 	<key>PROJECT_ID</key>
 	<string>instagram-a7218</string>
 	<key>STORAGE_BUCKET</key>

@@ -1,4 +1,4 @@
-package com.example.instagram
+package com.binx.bountier
 
 import io.flutter.embedding.android.FlutterActivity
 

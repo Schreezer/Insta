@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:152819163863:android:0c1c726f472d0685a50692",
         "android_client_info": {
-          "package_name": "com.example.instagram"
+          "package_name": "com.binx.bountier"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "152819163863-megdtj4hpi2qqifhtdmnk4cjvtr91p1q.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.example.instagram"
+                "bundle_id": "com.binx.bountier"
               }
             }
           ]

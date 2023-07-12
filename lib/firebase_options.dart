@@ -68,7 +68,7 @@ class DefaultFirebaseOptions {
     projectId: 'instagram-a7218',
     storageBucket: 'instagram-a7218.appspot.com',
     iosClientId: '152819163863-megdtj4hpi2qqifhtdmnk4cjvtr91p1q.apps.googleusercontent.com',
-    iosBundleId: 'com.example.instagram',
+    iosBundleId: 'com.binx.bountier',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -78,6 +78,6 @@ class DefaultFirebaseOptions {
     projectId: 'instagram-a7218',
     storageBucket: 'instagram-a7218.appspot.com',
     iosClientId: '152819163863-71dr07lm9n2p5p9fb84fjbut9rc1vme1.apps.googleusercontent.com',
-    iosBundleId: 'com.example.instagram.RunnerTests',
+    iosBundleId: 'com.binx.bountier.RunnerTests',
   );
 }

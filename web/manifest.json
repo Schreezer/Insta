@@ -1,6 +1,6 @@
 {
-    "name": "instagram",
-    "short_name": "instagram",
+    "name": "Bountier",
+    "short_name": "Bountier",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
